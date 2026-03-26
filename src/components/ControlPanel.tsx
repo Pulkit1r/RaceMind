@@ -4,7 +4,8 @@ import type { RaceState } from '../data';
 import { TIRE_COLORS } from '../data';
 import {
   Play, Square, Octagon, Shuffle, Settings,
-  ChevronDown, AlertTriangle, Droplets, CircleDot, FlaskConical
+  ChevronDown, AlertTriangle, Droplets, CircleDot, FlaskConical,
+  Volume2, VolumeX
 } from 'lucide-react';
 
 interface ControlPanelProps {
@@ -17,6 +18,8 @@ interface ControlPanelProps {
   onWeatherChange: (rainChance: number) => void;
   onAlternateStrategy: () => void;
   onOpenWhatIf: () => void;
+  onToggleAudio: () => void;
+  audioEnabled: boolean;
   isRacing: boolean;
 }
 
@@ -108,7 +111,8 @@ function NeonSlider({ value, min, max, step, label, displayValue, onChange, colo
 
 export default function ControlPanel({
   state, onStartRace, onStopRace, onPitNow, onChangeTire,
-  onTireWearChange, onWeatherChange, onAlternateStrategy, onOpenWhatIf, isRacing
+  onTireWearChange, onWeatherChange, onAlternateStrategy, onOpenWhatIf,
+  onToggleAudio, audioEnabled, isRacing
 }: ControlPanelProps) {
   const [tireMenuOpen, setTireMenuOpen] = useState(false);
 
@@ -175,6 +179,24 @@ export default function ControlPanel({
           disabled={!isRacing}
         />
       </div>
+
+      {/* Audio Toggle */}
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
+        onClick={onToggleAudio}
+        className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all duration-300 font-heading text-[10px] font-semibold tracking-wider uppercase ${
+          audioEnabled
+            ? 'bg-neon-green/10 border-neon-green/25 text-neon-green hover:bg-neon-green/15'
+            : 'bg-neon-red/10 border-neon-red/25 text-neon-red hover:bg-neon-red/15'
+        }`}
+      >
+        {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+        <span>{audioEnabled ? 'Audio Alerts ON' : 'Audio Alerts OFF'}</span>
+        <span className={`ml-auto w-2 h-2 rounded-full ${
+          audioEnabled ? 'bg-neon-green animate-neon-pulse' : 'bg-neon-red'
+        }`} />
+      </motion.button>
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-neon-purple/20 to-transparent" />
