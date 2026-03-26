@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { StrategyResult, RaceState } from '../data';
 import { TIRE_COLORS, formatLapTime } from '../data';
 import {
-  Trophy, Clock, ArrowDown, ArrowUp, Minus,
-  Flag, CircleDot, Timer, TrendingUp
+  Trophy, Flag, Timer, TrendingUp
 } from 'lucide-react';
 
 interface StrategyPanelProps {
@@ -21,10 +20,8 @@ function DeltaBadge({ delta, isBest }: { delta: number; isBest: boolean }) {
       </span>
     );
   }
-
   const color = delta < 5 ? 'text-neon-yellow' : delta < 15 ? 'text-neon-orange' : 'text-neon-red';
   const bg = delta < 5 ? 'bg-neon-yellow/10 border-neon-yellow/15' : delta < 15 ? 'bg-neon-orange/10 border-neon-orange/15' : 'bg-neon-red/10 border-neon-red/15';
-
   return (
     <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold border ${bg} ${color}`}>
       +{delta.toFixed(1)}s
@@ -68,7 +65,6 @@ function StrategyRow({ strat, rank, isExpanded, onToggle }: {
       }`}
       onClick={onToggle}
     >
-      {/* Main row */}
       <div className="flex items-center gap-2 p-2.5">
         {/* Rank */}
         <div className={`w-5 h-5 rounded flex items-center justify-center text-[9px] font-heading font-bold ${
@@ -132,23 +128,20 @@ function StrategyRow({ strat, rank, isExpanded, onToggle }: {
               </div>
             </div>
 
-            {/* Mini lap time sparkline (text representation) */}
+            {/* Mini sparkline */}
             <div className="mt-2 flex items-end gap-[1px] h-6">
               {strat.lapTimes.map((lt, i) => {
                 const minLt = Math.min(...strat.lapTimes);
                 const maxLt = Math.max(...strat.lapTimes);
                 const range = maxLt - minLt || 1;
                 const heightPct = 20 + ((lt - minLt) / range) * 80;
-                const isAfterPit = strat.pitLap > 0 && (i + 1) >= (strat.pitLap - (strat.lapTimes.length - strat.lapTimes.length));
                 return (
                   <div
                     key={i}
-                    className="flex-1 rounded-t-sm transition-colors"
+                    className="flex-1 rounded-t-sm"
                     style={{
                       height: `${heightPct}%`,
-                      backgroundColor: i === 0 && strat.pitLap > 0
-                        ? 'rgba(168,85,247,0.4)'
-                        : `${TIRE_COLORS[strat.tiresAfter]}30`,
+                      backgroundColor: `${TIRE_COLORS[strat.tiresAfter] ?? '#a855f7'}30`,
                     }}
                   />
                 );
@@ -162,11 +155,9 @@ function StrategyRow({ strat, rank, isExpanded, onToggle }: {
 }
 
 export default function StrategyPanel({ strategies, state }: StrategyPanelProps) {
-  const [expandedId, setExpandedId] = useMemo(() => [strategies[0]?.id, null], [strategies]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // Show top 5 strategies to keep the panel compact
   const topStrategies = useMemo(() => strategies.slice(0, 6), [strategies]);
-
   const best = topStrategies[0];
 
   if (topStrategies.length === 0) {
@@ -211,7 +202,7 @@ export default function StrategyPanel({ strategies, state }: StrategyPanelProps)
                 {best.label}
               </p>
               <p className="text-[9px] font-mono text-slate-400">
-                {formatLapTime(best.totalTime)} total
+                {formatLapTime(best.totalTime)} remaining
               </p>
             </div>
           </div>
@@ -219,23 +210,25 @@ export default function StrategyPanel({ strategies, state }: StrategyPanelProps)
       )}
 
       {/* Strategy comparison list */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-2 px-1">
-          <TrendingUp className="w-3 h-3 text-neon-purple" />
-          <h3 className="font-heading text-[9px] font-bold tracking-wider text-slate-500 uppercase">
-            Alternatives
-          </h3>
+      {topStrategies.length > 1 && (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 px-1">
+            <TrendingUp className="w-3 h-3 text-neon-purple" />
+            <h3 className="font-heading text-[9px] font-bold tracking-wider text-slate-500 uppercase">
+              Alternatives
+            </h3>
+          </div>
+          {topStrategies.slice(1).map((strat, idx) => (
+            <StrategyRow
+              key={strat.id}
+              strat={strat}
+              rank={idx + 1}
+              isExpanded={expandedId === strat.id}
+              onToggle={() => setExpandedId(expandedId === strat.id ? null : strat.id)}
+            />
+          ))}
         </div>
-        {topStrategies.slice(1).map((strat, idx) => (
-          <StrategyRow
-            key={strat.id}
-            strat={strat}
-            rank={idx + 1}
-            isExpanded={false}
-            onToggle={() => {}}
-          />
-        ))}
-      </div>
+      )}
     </div>
   );
 }

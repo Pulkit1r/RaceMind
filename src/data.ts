@@ -192,33 +192,53 @@ export function generateLapData(lapCount: number, compound: string = 'medium'): 
 
 const radioTemplates: { from: RadioMessage['from']; messages: string[]; priority: RadioMessage['priority'] }[] = [
   { from: 'engineer', messages: [
-    'Box this lap, box this lap. Switching to hards.',
-    'Okay, gap behind is 2.3 seconds. You have the gap.',
-    'Push now, push now. Target 1:14.8.',
+    'BOX BOX BOX. Box this lap, confirm.',
+    'Stay out, stay out. Tyres are fine. We go long.',
+    'BOX NOW! BOX NOW! This is your in-lap.',
+    'Gap behind is 2.3 seconds. You have the gap. Push.',
+    'Push now, push now. Target 1:14.8. Everything on the line.',
     'Rain expected in 5 laps. Standby for inters.',
-    'DRS enabled. You are within one second.',
+    'DRS is active. You are within one second. Attack zone.',
     'Fuel save mode. Lift and coast through turns 12 to 14.',
-    'Safety Car deployed. Hold position.',
-    'Great pace. Personal best sector 2.',
-    'Gap to P2 is closing. 0.8 seconds and closing.',
+    'Safety Car deployed. Hold position. Stack the tyres.',
+    'Great pace, mate. Personal best sector 2. Keep it up.',
+    'Gap to P2 closing. 0.8 seconds. Defend the inside.',
+    'We\'re looking at plan B. Standby for further instructions.',
+    'Pit window opens next lap. Prepare for stop. Mediums ready.',
+    'Head down. Solid laps. You\'re doing a mega job.',
+    'Track limits warning turn 9. Keep it clean.',
   ], priority: 'medium' },
+  { from: 'engineer', messages: [
+    'BOX BOX BOX! Critical — tyres are gone. Box now!',
+    'SAFETY CAR! SAFETY CAR! Free pit stop opportunity. BOX!',
+    'Rain is here! BOX for intermediates immediately!',
+  ], priority: 'critical' },
   { from: 'driver', messages: [
-    'These tyres are gone. I have no grip.',
-    'Copy. Boxing, boxing.',
-    'I feel good, I can push more.',
-    'Front left is overheating. Vibrations.',
-    'Understood. Saving fuel.',
-    'Car feels great. Let\'s go hunting.',
-    'That was close! Contact in turn 4.',
+    'These tyres are DEAD. I have zero grip. I\'m sliding everywhere.',
+    'Copy. Boxing, boxing. Let\'s go.',
+    'I feel good, I can push more. Give me the gap.',
+    'Front left is overheating. Massive vibrations. I can\'t hold this.',
+    'Understood. Saving fuel. Lift and coast.',
+    'Car feels INCREDIBLE. Let\'s go hunting. Come on!',
+    'That was close! Contact in turn 4. Check the front wing.',
+    'The guy behind is all over me. How far back?',
+    'No power! I lost power for a second! Check the engine.',
+    'Haha, get in there! Yes! What a move!',
+    'I\'m struggling in sector 3. The rear is snapping.',
+    'Copy, plan B. I\'m ready. Let\'s do this.',
+    'The rain is getting heavier. It\'s properly wet now.',
   ], priority: 'low' },
   { from: 'ai', messages: [
-    'Optimal pit window opens in 3 laps. Confidence: 92%.',
-    'Tire degradation accelerating. Recommend box within 5 laps.',
-    'Weather model update: 73% rain probability in 8 minutes.',
-    'Gap analysis: overtake opportunity in 2 laps if maintaining pace.',
-    'Risk assessment: undercut viable. Success probability 78%.',
-    'Fuel model nominal. Can extend 3 additional laps.',
-    'Competitor PIT: Hamilton boxing now. Overcut opportunity detected.',
+    'Optimal pit window opens in 3 laps. Confidence: 92%. Box for hards.',
+    'Tire degradation accelerating. Cliff in 4 laps. Recommend box within 5.',
+    'Weather model update: 73% rain probability in 8 minutes. Pre-position inters.',
+    'Gap analysis: overtake opportunity in 2 laps if maintaining current delta.',
+    'Risk assessment: undercut viable. Success probability 78%. Window closing.',
+    'Fuel model nominal. Can extend 3 additional laps before save mode.',
+    'Competitor PIT: Hamilton boxing now. Overcut opportunity detected. Stay out.',
+    'Degradation model: soft compound cliff at lap 18. Switch to mediums optimal.',
+    'Strategy recalculated. Current plan saves 4.2s vs alternatives. Continue.',
+    'DRS train detected ahead. Gap will compress. Prepare defensive strategy.',
   ], priority: 'high' },
 ];
 
@@ -234,68 +254,148 @@ export function generateRadioMessage(lap: number): RadioMessage {
   };
 }
 
-export function generateRecommendations(state: RaceState): AIRecommendation[] {
+export function generateRecommendations(
+  state: RaceState,
+  strategies: StrategyResult[] = [],
+): AIRecommendation[] {
   const recs: AIRecommendation[] = [];
+  const remainingLaps = state.totalLaps - state.currentLap;
 
-  if (state.tireWear < 40) {
+  // ─── Primary call: BOX BOX vs STAY OUT (from strategy engine) ─────────────
+  if (strategies.length > 0 && remainingLaps > 3) {
+    const best = strategies[0];
+    const stayOut = strategies.find(s => s.pitLap === 0);
+    const bestPit = strategies.find(s => s.pitLap > 0 && s.isBest);
+
+    if (best.pitLap > 0) {
+      // Strategy engine says PIT is faster
+      const timeSaved = stayOut ? stayOut.totalTime - best.totalTime : 0;
+      const pitOffset = best.pitLap - state.currentLap;
+      const isImmediate = pitOffset <= 1;
+
+      // Confidence: high when delta is large + tires are worn
+      const wearFactor = Math.min(30, (100 - state.tireWear) * 0.4);
+      const timeFactor = Math.min(40, timeSaved * 3);
+      const confidence = Math.min(98, Math.round(30 + wearFactor + timeFactor));
+
+      const reasons: string[] = [];
+      reasons.push(`Tire wear at ${state.tireWear.toFixed(0)}% on ${state.currentTire}s`);
+      if (timeSaved > 0) reasons.push(`pit saves ${timeSaved.toFixed(1)}s vs staying out`);
+      reasons.push(`switch → ${best.tiresAfter.toUpperCase()} compound`);
+      if (!isImmediate) reasons.push(`optimal window: lap ${best.pitLap} (+${pitOffset} laps)`);
+
+      recs.push({
+        id: 'rec-box-box',
+        type: 'pit',
+        title: isImmediate ? '🟥 BOX BOX BOX' : `🟨 BOX LAP ${best.pitLap}`,
+        description: reasons.join('. ') + '.',
+        risk: state.tireWear < 20 ? 'high' : state.tireWear < 40 ? 'medium' : 'low',
+        confidence,
+        timestamp: new Date().toISOString(),
+        urgent: isImmediate && state.tireWear < 30,
+      });
+    } else {
+      // Strategy engine says STAY OUT is optimal
+      const bestPitStrat = strategies.find(s => s.pitLap > 0);
+      const timeCost = bestPitStrat ? bestPitStrat.totalTime - best.totalTime : 0;
+
+      const reasons: string[] = [];
+      reasons.push(`Tires still competitive at ${state.tireWear.toFixed(0)}%`);
+      if (timeCost > 0) reasons.push(`pitting would cost +${timeCost.toFixed(1)}s`);
+      reasons.push(`${remainingLaps} laps remaining on ${state.currentTire}s`);
+      if (state.tireWear > 50) reasons.push('tire life sufficient to finish');
+
+      const confidence = Math.min(95, Math.round(
+        50 + (state.tireWear * 0.3) + (timeCost > 5 ? 20 : timeCost * 4)
+      ));
+
+      recs.push({
+        id: 'rec-stay-out',
+        type: 'pace',
+        title: '🟩 STAY OUT',
+        description: reasons.join('. ') + '.',
+        risk: state.tireWear < 30 ? 'high' : state.tireWear < 50 ? 'medium' : 'low',
+        confidence,
+        timestamp: new Date().toISOString(),
+        urgent: false,
+      });
+    }
+  } else if (state.tireWear < 40 && remainingLaps > 3) {
+    // Fallback BOX BOX when strategy engine hasn't run yet
+    const confidence = Math.min(98, Math.round(95 - state.tireWear * 0.5));
+    const nextTire = state.currentTire === 'soft' ? 'medium' : state.currentTire === 'medium' ? 'hard' : 'medium';
     recs.push({
       id: 'rec-pit-tire',
       type: 'pit',
-      title: 'BOX BOX BOX',
-      description: `Tire wear critical at ${state.tireWear.toFixed(0)}%. Optimal window closing. Recommend immediate pit stop for ${state.currentTire === 'medium' ? 'hard' : 'medium'} compound.`,
+      title: '🟥 BOX BOX BOX',
+      description: `Tire wear critical at ${state.tireWear.toFixed(0)}%. Recommend pit for ${nextTire}s. Degradation accelerating — grip loss imminent.`,
       risk: state.tireWear < 20 ? 'high' : 'medium',
-      confidence: Math.min(98, 95 - state.tireWear * 0.5),
+      confidence,
       timestamp: new Date().toISOString(),
       urgent: state.tireWear < 25,
     });
   }
 
+  // ─── Weather alert ────────────────────────────────────────────────────────
   if (state.rainChance > 50) {
+    const confidence = Math.round(state.rainChance * 0.95);
+    const reasons: string[] = [];
+    reasons.push(`Rain probability: ${state.rainChance}%`);
+    reasons.push(`Track temp: ${state.trackTemp.toFixed(0)}°C`);
+    if (state.rainChance > 75) {
+      reasons.push('consider preemptive switch to intermediates');
+    } else {
+      reasons.push('monitoring conditions — standby for inters');
+    }
+
     recs.push({
       id: 'rec-weather',
       type: 'weather',
-      title: 'WEATHER ALERT',
-      description: `Rain probability ${state.rainChance}%. Consider intermediate tires. Track temperature dropping.`,
+      title: state.rainChance > 75 ? '🌧️ RAIN IMMINENT' : '☁️ WEATHER WATCH',
+      description: reasons.join('. ') + '.',
       risk: state.rainChance > 70 ? 'high' : 'medium',
-      confidence: state.rainChance,
+      confidence,
       timestamp: new Date().toISOString(),
       urgent: state.rainChance > 80,
     });
   }
 
+  // ─── Overtake window ──────────────────────────────────────────────────────
   if (state.gapAhead < 1.0 && state.drs) {
     recs.push({
       id: 'rec-overtake',
       type: 'overtake',
-      title: 'OVERTAKE WINDOW',
-      description: `Gap to car ahead: ${state.gapAhead.toFixed(1)}s. DRS available. Attack in sector 1 recommended.`,
+      title: '⚡ OVERTAKE WINDOW',
+      description: `Gap to P${state.position - 1}: ${state.gapAhead.toFixed(1)}s with DRS active. Attack recommended through sector 1. Undercut momentum available.`,
       risk: 'medium',
-      confidence: 72,
+      confidence: Math.round(60 + (1.0 - state.gapAhead) * 30),
       timestamp: new Date().toISOString(),
       urgent: false,
     });
   }
 
-  if (state.fuelRemaining < 30) {
+  // ─── Fuel management ──────────────────────────────────────────────────────
+  if (state.fuelRemaining < 25) {
+    const lapsOfFuel = state.fuelRemaining / FUEL_PER_LAP;
     recs.push({
       id: 'rec-fuel',
       type: 'fuel',
-      title: 'FUEL MANAGEMENT',
-      description: `Fuel remaining: ${state.fuelRemaining.toFixed(1)}kg. Engage fuel save mode. Lift and coast recommended.`,
-      risk: state.fuelRemaining < 15 ? 'high' : 'low',
+      title: '⛽ FUEL MANAGEMENT',
+      description: `${state.fuelRemaining.toFixed(1)}kg remaining (~${lapsOfFuel.toFixed(0)} laps). Engage lift-and-coast through turns 12–14. Target: save 0.3kg/lap.`,
+      risk: state.fuelRemaining < 12 ? 'high' : 'low',
       confidence: 88,
       timestamp: new Date().toISOString(),
-      urgent: state.fuelRemaining < 15,
+      urgent: state.fuelRemaining < 12,
     });
   }
 
-  // Always have at least one recommendation
+  // ─── Fallback: no other recommendations ───────────────────────────────────
   if (recs.length === 0) {
     recs.push({
-      id: 'rec-strategy',
+      id: 'rec-hold',
       type: 'pace',
-      title: 'HOLD POSITION',
-      description: `Strategy nominal. Current pace is competitive. Maintain delta to car ahead at ${state.gapAhead.toFixed(1)}s.`,
+      title: '🟩 HOLD POSITION',
+      description: `Strategy nominal. Pace competitive at P${state.position}. Gap ahead: ${state.gapAhead.toFixed(1)}s, behind: ${state.gapBehind.toFixed(1)}s. Maintain current delta.`,
       risk: 'low',
       confidence: 85,
       timestamp: new Date().toISOString(),
@@ -347,7 +447,7 @@ function predictLapTime(
 /**
  * Simulate remaining laps for a single-stop strategy with a given pit window.
  */
-function simulateStint(
+export function simulateStint(
   startLap: number,
   totalLaps: number,
   currentWear: number,
@@ -384,6 +484,72 @@ function simulateStint(
   }
 
   return { totalTime: parseFloat(totalTime.toFixed(3)), lapTimes };
+}
+
+// ─── What-If Comparison ──────────────────────────────────────────────────────
+
+export interface WhatIfLapPoint {
+  lap: number;
+  current: number;   // lap time for current strategy (stay out)
+  whatIf: number;     // lap time for what-if scenario
+}
+
+export interface WhatIfResult {
+  currentTotal: number;
+  whatIfTotal: number;
+  delta: number;            // positive = what-if is faster
+  whatIfFaster: boolean;
+  laps: WhatIfLapPoint[];
+}
+
+/**
+ * Compare current trajectory (no pit) against a what-if scenario (pit at given lap on given compound).
+ * Returns per-lap comparison data for charting.
+ */
+export function simulateWhatIf(
+  state: RaceState,
+  whatIfPitLap: number,
+  whatIfCompound: string,
+): WhatIfResult {
+  const startLap = state.currentLap + 1;
+  if (startLap > state.totalLaps) {
+    return { currentTotal: 0, whatIfTotal: 0, delta: 0, whatIfFaster: false, laps: [] };
+  }
+
+  // Current trajectory: stay out on current tires
+  const current = simulateStint(
+    startLap, state.totalLaps,
+    state.tireWear, state.tireAge, state.currentTire,
+    state.fuelRemaining,
+    0, state.currentTire,
+  );
+
+  // What-if: pit at given lap on given compound
+  const whatIf = simulateStint(
+    startLap, state.totalLaps,
+    state.tireWear, state.tireAge, state.currentTire,
+    state.fuelRemaining,
+    whatIfPitLap, whatIfCompound,
+  );
+
+  const laps: WhatIfLapPoint[] = [];
+  for (let i = 0; i < current.lapTimes.length; i++) {
+    laps.push({
+      lap: startLap + i,
+      current: current.lapTimes[i],
+      whatIf: whatIf.lapTimes[i],
+    });
+  }
+
+  const delta = current.totalTime - whatIf.totalTime;
+
+  return {
+    currentTotal: current.totalTime,
+    whatIfTotal: whatIf.totalTime,
+    delta: parseFloat(delta.toFixed(3)),
+    whatIfFaster: delta > 0,
+    laps,
+  };
 }
 
 /**

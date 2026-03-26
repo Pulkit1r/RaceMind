@@ -30,9 +30,13 @@ function StatusBadge({ status }: { status: RaceState['raceStatus'] }) {
   };
   
   return (
-    <span className={`px-3 py-1 rounded-full text-[10px] font-heading font-bold uppercase tracking-wider border ${colors[status]}`}>
+    <motion.span
+      animate={status === 'racing' ? { boxShadow: ['0 0 8px rgba(0,255,136,0.2)', '0 0 20px rgba(0,255,136,0.4)', '0 0 8px rgba(0,255,136,0.2)'] } : {}}
+      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+      className={`px-3 py-1 rounded-full text-[10px] font-heading font-bold uppercase tracking-wider border ${colors[status]}`}
+    >
       {status === 'vsc' ? 'VSC' : status.replace('-', ' ')}
-    </span>
+    </motion.span>
   );
 }
 
@@ -67,6 +71,7 @@ export default function TopBar({ state }: TopBarProps) {
       <div className="absolute bottom-0 left-0 h-[2px] w-full bg-surface-700">
         <motion.div
           className="h-full bg-gradient-to-r from-neon-purple via-neon-green to-neon-purple"
+          style={{ boxShadow: '0 0 10px rgba(0,255,136,0.3), 0 0 20px rgba(168,85,247,0.2)' }}
           initial={{ width: 0 }}
           animate={{ width: `${lapProgress}%` }}
           transition={{ duration: 0.5 }}
@@ -76,7 +81,7 @@ export default function TopBar({ state }: TopBarProps) {
       {/* Left: Logo + Race Info */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-purple to-neon-green flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-purple to-neon-green flex items-center justify-center animate-float-glow">
             <Zap className="w-5 h-5 text-surface-900" />
           </div>
           <div>

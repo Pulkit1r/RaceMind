@@ -4,7 +4,7 @@ import type { RaceState } from '../data';
 import { TIRE_COLORS } from '../data';
 import {
   Play, Square, Octagon, Shuffle, Settings,
-  ChevronDown, AlertTriangle, Droplets, CircleDot
+  ChevronDown, AlertTriangle, Droplets, CircleDot, FlaskConical
 } from 'lucide-react';
 
 interface ControlPanelProps {
@@ -16,6 +16,7 @@ interface ControlPanelProps {
   onTireWearChange: (wear: number) => void;
   onWeatherChange: (rainChance: number) => void;
   onAlternateStrategy: () => void;
+  onOpenWhatIf: () => void;
   isRacing: boolean;
 }
 
@@ -107,7 +108,7 @@ function NeonSlider({ value, min, max, step, label, displayValue, onChange, colo
 
 export default function ControlPanel({
   state, onStartRace, onStopRace, onPitNow, onChangeTire,
-  onTireWearChange, onWeatherChange, onAlternateStrategy, isRacing
+  onTireWearChange, onWeatherChange, onAlternateStrategy, onOpenWhatIf, isRacing
 }: ControlPanelProps) {
   const [tireMenuOpen, setTireMenuOpen] = useState(false);
 
@@ -162,6 +163,15 @@ export default function ControlPanel({
           icon={<Shuffle className="w-4 h-4" />}
           label="Alt Strategy"
           variant="purple"
+          disabled={!isRacing}
+        />
+
+        {/* What-If Simulator */}
+        <ActionButton
+          onClick={onOpenWhatIf}
+          icon={<FlaskConical className="w-4 h-4" />}
+          label="What If"
+          variant="neutral"
           disabled={!isRacing}
         />
       </div>

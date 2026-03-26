@@ -5,6 +5,8 @@ import ControlPanel from './components/ControlPanel';
 import CenterPanel from './components/CenterPanel';
 import AIPanel from './components/AIPanel';
 import RadioPanel from './components/RadioPanel';
+import WhatIfModal from './components/WhatIfModal';
+import { fireAlert, unlockAudio, setMuted, getMuted, setVoiceEnabled } from './audioAlerts';
 import {
   initialRaceState,
   generateRadioMessage,
@@ -26,7 +28,11 @@ export default function App() {
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([]);
   const [strategies, setStrategies] = useState<StrategyResult[]>([]);
   const [isRacing, setIsRacing] = useState(false);
+  const [showWhatIf, setShowWhatIf] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const prevTireWearRef = useRef(100);
+  const prevRainRef = useRef(0);
 
   // ─── Simulation tick ───────────────────────────────────────────────────────
   const simulateLap = useCallback(() => {
@@ -100,12 +106,38 @@ export default function App() {
         weather: rainChance > 90 ? 'heavy-rain' : rainChance > 60 ? 'light-rain' : rainChance > 35 ? 'cloudy' : 'sunny',
       };
 
-      const recs = generateRecommendations(newState);
-      setRecommendations(recs);
-
-      // ── Run strategy engine every lap ──
+      // ── Run strategy engine then feed results into recommendations ──
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
+      const recs = generateRecommendations(newState, strats);
+      setRecommendations(recs);
+
+      // ── Audio alerts based on state changes ──
+      // Critical tire wear threshold
+      if (newTireWear < 20 && prevTireWearRef.current >= 20) {
+        fireAlert({ level: 'critical', message: 'Warning. Tyre wear critical. Box this lap.' });
+      } else if (newTireWear < 35 && prevTireWearRef.current >= 35) {
+        fireAlert({ level: 'warning', message: 'Tyres degrading. Consider pit stop.' });
+      }
+      prevTireWearRef.current = newTireWear;
+
+      // Rain threshold audio
+      if (rainChance > 90 && prev.rainChance <= 90) {
+        fireAlert({ level: 'critical', message: 'Heavy rain incoming. Box for wet tyres immediately.' });
+      } else if (rainChance > 60 && prev.rainChance <= 60) {
+        fireAlert({ level: 'warning', message: 'Rain probability rising. Consider intermediates.' });
+      }
+
+      // Urgent recommendation audio
+      const urgentRec = recs.find(r => r.urgent);
+      if (urgentRec && urgentRec.title.includes('BOX')) {
+        fireAlert({ level: 'critical', message: 'Box box box. Box this lap.' });
+      }
+
+      // Fuel critical
+      if (fuel < 10 && prev.fuelRemaining >= 10) {
+        fireAlert({ level: 'warning', message: 'Fuel critical. Engage maximum fuel save mode.' });
+      }
 
       return newState;
     });
@@ -113,12 +145,17 @@ export default function App() {
 
   // ─── Button handlers ───────────────────────────────────────────────────────
   const handleStartRace = useCallback(() => {
+    unlockAudio(); // Unlock AudioContext on user gesture
     setIsRacing(true);
     setRaceState((prev) => ({ ...prev, raceStatus: 'racing', currentLap: 0 }));
     setLapData([]);
     setRadioMessages([]);
     setRecommendations([]);
     setStrategies([]);
+    prevTireWearRef.current = 100;
+    prevRainRef.current = 0;
+
+    fireAlert({ level: 'race-start' });
 
     const startMsg: RadioMessage = {
       id: 'start-msg',
@@ -138,6 +175,8 @@ export default function App() {
   }, []);
 
   const handlePitNow = useCallback(() => {
+    unlockAudio();
+    fireAlert({ level: 'critical', message: 'Box box box. Come in this lap.' });
     setRaceState((prev) => {
       const nextTire = prev.currentTire === 'soft' ? 'medium' : prev.currentTire === 'medium' ? 'hard' : 'medium';
       const pitMsg: RadioMessage = {
@@ -157,8 +196,9 @@ export default function App() {
         pitStops: prev.pitStops + 1,
         lastPitLap: prev.currentLap,
       };
-      setRecommendations(generateRecommendations(newState));
-      setStrategies(simulatePitStrategies(newState));
+      const strats = simulatePitStrategies(newState);
+      setStrategies(strats);
+      setRecommendations(generateRecommendations(newState, strats));
       return newState;
     });
   }, []);
@@ -182,8 +222,9 @@ export default function App() {
         pitStops: prev.pitStops + 1,
         lastPitLap: prev.currentLap,
       };
-      setRecommendations(generateRecommendations(newState));
-      setStrategies(simulatePitStrategies(newState));
+      const strats = simulatePitStrategies(newState);
+      setStrategies(strats);
+      setRecommendations(generateRecommendations(newState, strats));
       return newState;
     });
   }, []);
@@ -192,8 +233,9 @@ export default function App() {
   const handleTireWearChange = useCallback((wear: number) => {
     setRaceState((prev) => {
       const newState = { ...prev, tireWear: wear };
-      setRecommendations(generateRecommendations(newState));
-      setStrategies(simulatePitStrategies(newState));
+      const strats = simulatePitStrategies(newState);
+      setStrategies(strats);
+      setRecommendations(generateRecommendations(newState, strats));
       return newState;
     });
   }, []);
@@ -203,8 +245,9 @@ export default function App() {
       const weather: RaceState['weather'] =
         rainChance > 90 ? 'heavy-rain' : rainChance > 60 ? 'light-rain' : rainChance > 35 ? 'cloudy' : 'sunny';
       const newState = { ...prev, rainChance, weather };
-      setRecommendations(generateRecommendations(newState));
-      setStrategies(simulatePitStrategies(newState));
+      const strats = simulatePitStrategies(newState);
+      setStrategies(strats);
+      setRecommendations(generateRecommendations(newState, strats));
 
       // Fire a radio message when crossing thresholds
       if ((prev.rainChance <= 60 && rainChance > 60) || (prev.rainChance <= 90 && rainChance > 90)) {
@@ -218,6 +261,13 @@ export default function App() {
           priority: rainChance > 90 ? 'critical' : 'high',
         };
         setRadioMessages((msgs) => [...msgs.slice(-19), weatherMsg]);
+
+        // Audio alert on weather threshold
+        if (rainChance > 90) {
+          fireAlert({ level: 'critical', message: 'Heavy rain incoming. Switch to wet tyres.' });
+        } else {
+          fireAlert({ level: 'warning', message: 'Rain probability rising. Consider intermediates.' });
+        }
       }
 
       return newState;
@@ -272,8 +322,9 @@ export default function App() {
         timestamp: new Date().toISOString(),
         urgent: alt.tire === 'soft',
       };
-      setRecommendations([altRec, ...generateRecommendations(newState)]);
-      setStrategies(simulatePitStrategies(newState));
+      const strats = simulatePitStrategies(newState);
+      setStrategies(strats);
+      setRecommendations([altRec, ...generateRecommendations(newState, strats)]);
 
       return newState;
     });
@@ -311,6 +362,7 @@ export default function App() {
               onTireWearChange={handleTireWearChange}
               onWeatherChange={handleWeatherChange}
               onAlternateStrategy={handleAlternateStrategy}
+              onOpenWhatIf={() => setShowWhatIf(true)}
               isRacing={isRacing}
             />
           </div>
@@ -329,6 +381,13 @@ export default function App() {
         {/* Bottom Panel - Radio */}
         <RadioPanel messages={radioMessages} />
       </div>
+
+      {/* What-If Modal */}
+      <WhatIfModal
+        state={raceState}
+        isOpen={showWhatIf}
+        onClose={() => setShowWhatIf(false)}
+      />
     </div>
   );
 }
