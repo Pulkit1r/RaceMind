@@ -6,7 +6,16 @@ import CenterPanel from './components/CenterPanel';
 import AIPanel from './components/AIPanel';
 import RadioPanel from './components/RadioPanel';
 import WhatIfModal from './components/WhatIfModal';
+import RaceResultModal from './components/RaceResultModal';
 import { fireAlert, unlockAudio, setMuted, getMuted, setVoiceEnabled } from './audioAlerts';
+import {
+  fetchTrackWeather,
+  getAvailableTracks,
+  setWeatherApiKey,
+  getWeatherApiKey,
+  hasWeatherApiKey,
+  type WeatherData,
+} from './weatherApi';
 import {
   initialRaceState,
   generateRadioMessage,
@@ -14,6 +23,7 @@ import {
   simulatePitStrategies,
   computeTireWear,
   computeLapTime,
+  getTrackAbrasion,
   type RaceState,
   type LapData,
   type RadioMessage,
@@ -29,10 +39,69 @@ export default function Dashboard() {
   const [strategies, setStrategies] = useState<StrategyResult[]>([]);
   const [isRacing, setIsRacing] = useState(false);
   const [showWhatIf, setShowWhatIf] = useState(false);
+  const [showResult, setShowResult] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
+  const [liveWeather, setLiveWeather] = useState<WeatherData | null>(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState(getWeatherApiKey());
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const weatherIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const prevTireWearRef = useRef(100);
   const prevRainRef = useRef(0);
+
+  // ─── Weather fetching ─────────────────────────────────────────────────────
+  const fetchWeather = useCallback(async (trackName: string) => {
+    setWeatherLoading(true);
+    try {
+      const data = await fetchTrackWeather(trackName);
+      if (data) {
+        setLiveWeather(data);
+        // Apply live weather to race state
+        setRaceState(prev => ({
+          ...prev,
+          airTemp: data.airTemp,
+          trackTemp: data.trackTemp,
+          rainChance: data.rainChance,
+          weather: data.condition,
+        }));
+      }
+    } catch (err) {
+      console.error('[Dashboard] Weather fetch error:', err);
+    } finally {
+      setWeatherLoading(false);
+    }
+  }, []);
+
+  // Fetch weather on mount and when track changes
+  useEffect(() => {
+    fetchWeather(raceState.trackName);
+  }, [raceState.trackName, fetchWeather]);
+
+  // Refresh weather every 60s during a race
+  useEffect(() => {
+    if (isRacing) {
+      weatherIntervalRef.current = setInterval(() => {
+        fetchWeather(raceState.trackName);
+      }, 60000);
+    } else {
+      if (weatherIntervalRef.current) clearInterval(weatherIntervalRef.current);
+    }
+    return () => {
+      if (weatherIntervalRef.current) clearInterval(weatherIntervalRef.current);
+    };
+  }, [isRacing, raceState.trackName, fetchWeather]);
+
+  // ─── Track change handler ─────────────────────────────────────────────────
+  const handleTrackChange = useCallback((trackName: string) => {
+    setRaceState(prev => ({ ...prev, trackName }));
+  }, []);
+
+  // ─── API Key handler ──────────────────────────────────────────────────────
+  const handleApiKeySubmit = useCallback((key: string) => {
+    setWeatherApiKey(key);
+    setApiKeyInput(key);
+    fetchWeather(raceState.trackName);
+  }, [raceState.trackName, fetchWeather]);
 
   // ─── Simulation tick ───────────────────────────────────────────────────────
   const simulateLap = useCallback(() => {
@@ -40,13 +109,15 @@ export default function Dashboard() {
       if (prev.currentLap >= prev.totalLaps) {
         setIsRacing(false);
         if (intervalRef.current) clearInterval(intervalRef.current);
+        // Show result screen after a short delay for dramatic effect
+        setTimeout(() => setShowResult(true), 500);
         return { ...prev, raceStatus: 'finished' };
       }
 
       const newLap = prev.currentLap + 1;
 
-      // ── Tire degradation (compound-specific, accelerating) ──
-      const newTireWear = computeTireWear(prev.tireWear, prev.tireAge, prev.currentTire);
+      // ── Tire degradation (compound + track + temperature aware) ──
+      const newTireWear = computeTireWear(prev.tireWear, prev.tireAge, prev.currentTire, prev.trackTemp, getTrackAbrasion(prev.trackName));
 
       // ── Fuel consumption ──
       const fuel = Math.max(0, prev.fuelRemaining - 1.4);
@@ -58,10 +129,19 @@ export default function Dashboard() {
         fuel,
       );
 
-      // ── Position shuffles ──
+      // ── Position battles (tire-state-dependent) ──
       let newPos = prev.position;
-      if (Math.random() > 0.92) {
-        newPos = Math.max(1, Math.min(20, newPos + (Math.random() > 0.5 ? -1 : 1)));
+      // ~30% chance of position change each lap
+      if (Math.random() > 0.70) {
+        // Fresh tires → more likely to gain; worn tires → more likely to lose
+        const tireAdvantage = newTireWear > 60 ? 0.65 : newTireWear > 30 ? 0.5 : 0.3;
+        if (Math.random() < tireAdvantage) {
+          // Gain position (overtake)
+          newPos = Math.max(1, newPos - 1);
+        } else {
+          // Lose position (get overtaken)
+          newPos = Math.min(20, newPos + 1);
+        }
       }
 
       const newLapData: LapData = {
@@ -340,9 +420,48 @@ export default function Dashboard() {
     });
   }, []);
 
+  // ─── Keyboard shortcuts ────────────────────────────────────────────────────
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore when typing in input fields
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      switch (e.key.toLowerCase()) {
+        case ' ': // Space = Start / Stop
+          e.preventDefault();
+          if (isRacing) {
+            handleStopRace();
+          } else if (raceState.raceStatus !== 'finished') {
+            handleStartRace();
+          }
+          break;
+        case 'p': // P = Pit stop
+          if (isRacing) {
+            e.preventDefault();
+            handlePitNow();
+          }
+          break;
+        case 'w': // W = What-If
+          if (isRacing) {
+            e.preventDefault();
+            setShowWhatIf((prev) => !prev);
+          }
+          break;
+        case 'm': // M = Mute/Unmute
+          e.preventDefault();
+          handleToggleAudio();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isRacing, raceState.raceStatus, handleStartRace, handleStopRace, handlePitNow, handleToggleAudio]);
+
   useEffect(() => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      if (weatherIntervalRef.current) clearInterval(weatherIntervalRef.current);
     };
   }, []);
 
@@ -357,7 +476,7 @@ export default function Dashboard() {
 
       <div className="relative z-10 flex flex-col h-full gap-3">
         {/* Top Bar */}
-        <TopBar state={raceState} />
+        <TopBar state={raceState} liveWeather={liveWeather} weatherLoading={weatherLoading} />
 
         {/* Main Content: Left + Center + Right */}
         <div className="flex-1 flex gap-3 min-h-0">
@@ -376,6 +495,11 @@ export default function Dashboard() {
               onToggleAudio={handleToggleAudio}
               audioEnabled={audioEnabled}
               isRacing={isRacing}
+              onTrackChange={handleTrackChange}
+              onApiKeySubmit={handleApiKeySubmit}
+              apiKey={apiKeyInput}
+              liveWeather={liveWeather}
+              weatherLoading={weatherLoading}
             />
           </div>
 
@@ -399,6 +523,14 @@ export default function Dashboard() {
         state={raceState}
         isOpen={showWhatIf}
         onClose={() => setShowWhatIf(false)}
+      />
+
+      {/* Race Result Modal */}
+      <RaceResultModal
+        isOpen={showResult}
+        onClose={() => setShowResult(false)}
+        state={raceState}
+        lapData={lapData}
       />
     </div>
   );

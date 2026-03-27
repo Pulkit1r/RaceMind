@@ -1,12 +1,15 @@
 import { motion } from 'framer-motion';
 import type { RaceState } from '../data';
+import type { WeatherData } from '../weatherApi';
 import {
   Cloud, Sun, CloudRain, CloudLightning, Flag, Timer, Gauge,
-  Zap, Fuel, Radio, Trophy, BarChart3
+  Zap, Fuel, Radio, Trophy, BarChart3, Wifi, WifiOff, Wind, Droplets
 } from 'lucide-react';
 
 interface TopBarProps {
   state: RaceState;
+  liveWeather?: WeatherData | null;
+  weatherLoading?: boolean;
 }
 
 function WeatherIcon({ weather }: { weather: RaceState['weather'] }) {
@@ -40,25 +43,27 @@ function StatusBadge({ status }: { status: RaceState['raceStatus'] }) {
   );
 }
 
-function DataCell({ icon, label, value, color = 'text-slate-200' }: {
+function DataCell({ icon, label, value, color = 'text-slate-200', live = false }: {
   icon: React.ReactNode;
   label: string;
   value: string | number;
   color?: string;
+  live?: boolean;
 }) {
   return (
     <div className="flex items-center gap-2 px-3 py-1.5">
       <div className="text-slate-500">{icon}</div>
       <div className="flex flex-col">
         <span className="text-[9px] uppercase tracking-wider text-slate-500 font-heading">{label}</span>
-        <span className={`text-sm font-mono font-semibold ${color}`}>{value}</span>
+        <span className={`text-sm font-mono font-semibold ${color} ${live ? 'telemetry-live' : ''}`}>{value}</span>
       </div>
     </div>
   );
 }
 
-export default function TopBar({ state }: TopBarProps) {
+export default function TopBar({ state, liveWeather, weatherLoading }: TopBarProps) {
   const lapProgress = state.totalLaps > 0 ? (state.currentLap / state.totalLaps) * 100 : 0;
+  const isLive = liveWeather?.isLive ?? false;
 
   return (
     <motion.header
@@ -104,45 +109,73 @@ export default function TopBar({ state }: TopBarProps) {
           label="Lap"
           value={`${state.currentLap}/${state.totalLaps}`}
           color="text-neon-green"
+          live={state.raceStatus === 'racing'}
         />
         <DataCell
           icon={<Trophy className="w-3.5 h-3.5" />}
           label="Position"
           value={`P${state.position}`}
           color={state.position <= 3 ? 'text-neon-green' : 'text-slate-200'}
+          live={state.raceStatus === 'racing'}
         />
         <DataCell
           icon={<Timer className="w-3.5 h-3.5" />}
           label="Gap Ahead"
           value={`+${state.gapAhead.toFixed(1)}s`}
           color="text-neon-yellow"
+          live={state.raceStatus === 'racing'}
         />
         <DataCell
           icon={<Timer className="w-3.5 h-3.5" />}
           label="Gap Behind"
           value={`-${state.gapBehind.toFixed(1)}s`}
           color="text-neon-red"
+          live={state.raceStatus === 'racing'}
         />
         <DataCell
           icon={<Fuel className="w-3.5 h-3.5" />}
           label="Fuel"
           value={`${state.fuelRemaining.toFixed(0)}kg`}
           color={state.fuelRemaining < 20 ? 'text-neon-red' : 'text-slate-200'}
+          live={state.raceStatus === 'racing'}
         />
         <DataCell
           icon={<Gauge className="w-3.5 h-3.5" />}
           label="ERS"
-          value={`${state.ersDeployment}%`}
+          value={`${Math.round(state.ersDeployment)}%`}
           color="text-neon-blue"
+          live={state.raceStatus === 'racing'}
         />
       </div>
 
-      {/* Right: Weather */}
+      {/* Right: Weather + Live Badge */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-700/50">
           <WeatherIcon weather={state.weather} />
           <div className="flex flex-col">
-            <span className="text-[9px] uppercase tracking-wider text-slate-500 font-heading">Weather</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] uppercase tracking-wider text-slate-500 font-heading">Weather</span>
+              {/* Live/Sim Badge */}
+              <motion.span
+                animate={isLive ? { opacity: [1, 0.5, 1] } : {}}
+                transition={{ duration: 2, repeat: Infinity }}
+                className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[7px] font-heading font-bold tracking-wider ${
+                  weatherLoading
+                    ? 'bg-neon-yellow/15 text-neon-yellow border border-neon-yellow/20'
+                    : isLive
+                    ? 'bg-neon-green/15 text-neon-green border border-neon-green/20'
+                    : 'bg-neon-purple/15 text-neon-purple border border-neon-purple/20'
+                }`}
+              >
+                {weatherLoading ? (
+                  <><span className="w-1 h-1 rounded-full bg-neon-yellow animate-ping" /> FETCHING</>
+                ) : isLive ? (
+                  <><Wifi className="w-2 h-2" /> LIVE</>
+                ) : (
+                  <><WifiOff className="w-2 h-2" /> SIM</>
+                )}
+              </motion.span>
+            </div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-slate-300">
                 {state.airTemp}°C Air / {state.trackTemp}°C Track
@@ -151,6 +184,20 @@ export default function TopBar({ state }: TopBarProps) {
                 {state.rainChance}% rain
               </span>
             </div>
+            {/* Extra detail row when live weather available */}
+            {liveWeather && (
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="flex items-center gap-0.5 text-[8px] font-mono text-slate-500">
+                  <Wind className="w-2 h-2" /> {liveWeather.windSpeed.toFixed(1)}m/s
+                </span>
+                <span className="flex items-center gap-0.5 text-[8px] font-mono text-slate-500">
+                  <Droplets className="w-2 h-2" /> {liveWeather.humidity}%
+                </span>
+                <span className="text-[8px] font-mono text-slate-600">
+                  Grip: {(liveWeather.gripFactor * 100).toFixed(0)}%
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

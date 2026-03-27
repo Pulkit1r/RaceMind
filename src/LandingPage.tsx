@@ -316,9 +316,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.5, delay: 3.0 }}
                 className="absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-neon-red/15 border border-neon-red/30"
               >
-                <span className="text-xs font-heading font-bold text-neon-red glow-text-red tracking-wider">
-                  🟥 BOX BOX BOX
-                </span>
+                
               </motion.div>
             </div>
           </motion.div>

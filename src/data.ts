@@ -21,22 +21,69 @@ export const TIRE_MODELS: Record<string, TireModel> = {
   wet:    { baseOffset:  2.50, wearPerLap: 1.2, wearAccel: 0.02, lapTimePenalty: 0.014 },
 };
 
+// ─── Track Surface Abrasion Coefficients ─────────────────────────────────────
+// Each track has a unique surface abrasion factor that multiplies tire wear.
+// 1.0 = baseline, >1.0 = more abrasive (eats tires), <1.0 = smooth (preserves tires)
+// Values derived from real F1 Pirelli compound selection data & track characteristics.
+export const TRACK_ABRASION: Record<string, number> = {
+  'Circuit de Monaco':  0.75,  // Smooth street circuit, low speed corners → gentle on tires
+  'Silverstone':        1.10,  // High-speed corners, Copse/Maggots load tires heavily
+  'Monza':              0.85,  // Low-downforce, long straights → low lateral tire load
+  'Spa-Francorchamps':  1.05,  // Eau Rouge, high energy corners, mixed surface age
+  'Suzuka':             1.15,  // Figure-8 layout, constant high-speed loading on both sides
+  'Interlagos':         1.20,  // Rough, bumpy surface, anti-clockwise biases left tires
+  'COTA':               1.10,  // Bumpy surface, multi-elevation changes
+  'Yas Marina':         0.90,  // Smooth modern surface, low abrasion
+  'Bahrain':            1.25,  // Most abrasive track on calendar — sand-blasted surface
+  'Jeddah':             0.80,  // Street circuit, smooth asphalt, medium-speed
+  'Melbourne':          0.95,  // Semi-street circuit, resurfaced, moderate abrasion
+  'Barcelona':          1.15,  // High-speed final sector destroys rear tires, testing track
+  'Singapore':          0.85,  // Street circuit, low speed, smooth surface
+  'Zandvoort':          1.10,  // Banked corners add extra tire stress, compact layout
+  'Hungaroring':        1.00,  // Twisty, low-speed — moderate wear, balanced
+};
+
+/**
+ * Get track abrasion coefficient. Falls back to 1.0 for unknown tracks.
+ */
+export function getTrackAbrasion(trackName: string): number {
+  return TRACK_ABRASION[trackName] ?? 1.0;
+}
+
 const BASE_LAP_TIME = 75.5; // seconds – baseline on fresh mediums with full fuel
 const FUEL_LOAD_FULL = 70;  // kg at race start (50 laps)
 const FUEL_PER_LAP = 1.4;   // kg consumed per lap
 
 /**
+ * Compute a thermal wear multiplier from track temperature.
+ * Hotter track surface → faster rubber degradation.
+ * Reference point: 40°C track temp = 1.0x (neutral).
+ * Every 10°C above/below shifts wear by ±12%.
+ */
+function thermalWearMultiplier(trackTemp: number): number {
+  // Normalise around 40°C reference
+  const delta = (trackTemp - 40) / 10;
+  return Math.max(0.7, Math.min(1.4, 1.0 + delta * 0.12));
+}
+
+/**
  * Compute tire wear remaining after one more lap on the current compound.
  * Degradation accelerates with tire age (quadratic cliff).
+ * Now factors in track surface abrasion and track temperature.
  */
 export function computeTireWear(
   currentWear: number,
   tireAge: number,
   compound: string,
+  trackTemp: number = 40,
+  abrasionCoeff: number = 1.0,
 ): number {
   const model = TIRE_MODELS[compound] ?? TIRE_MODELS.medium;
-  // Wear rate increases each lap: base + accel * age  →  simulates the "cliff"
-  const wearThisLap = model.wearPerLap + model.wearAccel * tireAge;
+  // Base wear rate increases each lap: base + accel * age → simulates the "cliff"
+  const baseWear = model.wearPerLap + model.wearAccel * tireAge;
+  // Apply track-specific multipliers
+  const thermalFactor = thermalWearMultiplier(trackTemp);
+  const wearThisLap = baseWear * abrasionCoeff * thermalFactor;
   return Math.max(0, currentWear - wearThisLap);
 }
 
@@ -444,6 +491,20 @@ function predictLapTime(
   return BASE_LAP_TIME + model.baseOffset + tirePenalty + fuelEffect;
 }
 
+// Overload that accepts track conditions for strategy engine
+function predictLapTimeWithTrack(
+  tireWear: number,
+  compound: string,
+  fuelRemaining: number,
+  trackTemp: number,
+  abrasionCoeff: number,
+): number {
+  // Track conditions already factored into tire wear calc,
+  // but hot tracks also reduce aero efficiency slightly
+  const heatPenalty = Math.max(0, (trackTemp - 45) * 0.008); // ~0.04s penalty per 5°C above 45
+  return predictLapTime(tireWear, compound, fuelRemaining) + heatPenalty;
+}
+
 /**
  * Simulate remaining laps for a single-stop strategy with a given pit window.
  */
@@ -456,6 +517,8 @@ export function simulateStint(
   fuelAtStart: number,
   pitAtLap: number,          // 0 = no pit (stay out)
   newCompound: string,
+  trackTemp: number = 40,
+  abrasionCoeff: number = 1.0,
 ): { totalTime: number; lapTimes: number[] } {
   let wear = currentWear;
   let tireAge = currentTireAge;
@@ -473,11 +536,11 @@ export function simulateStint(
       compound = newCompound;
     }
 
-    // Degrade tires
-    wear = computeTireWear(wear, tireAge, compound);
+    // Degrade tires (track-aware)
+    wear = computeTireWear(wear, tireAge, compound, trackTemp, abrasionCoeff);
     fuel = Math.max(0, fuel - FUEL_PER_LAP);
 
-    const lt = predictLapTime(wear, compound, fuel);
+    const lt = predictLapTimeWithTrack(wear, compound, fuel, trackTemp, abrasionCoeff);
     lapTimes.push(parseFloat(lt.toFixed(3)));
     totalTime += lt;
     tireAge++;
@@ -516,12 +579,15 @@ export function simulateWhatIf(
     return { currentTotal: 0, whatIfTotal: 0, delta: 0, whatIfFaster: false, laps: [] };
   }
 
+  const abrasion = getTrackAbrasion(state.trackName);
+
   // Current trajectory: stay out on current tires
   const current = simulateStint(
     startLap, state.totalLaps,
     state.tireWear, state.tireAge, state.currentTire,
     state.fuelRemaining,
     0, state.currentTire,
+    state.trackTemp, abrasion,
   );
 
   // What-if: pit at given lap on given compound
@@ -530,6 +596,7 @@ export function simulateWhatIf(
     state.tireWear, state.tireAge, state.currentTire,
     state.fuelRemaining,
     whatIfPitLap, whatIfCompound,
+    state.trackTemp, abrasion,
   );
 
   const laps: WhatIfLapPoint[] = [];
@@ -564,6 +631,7 @@ export function simulatePitStrategies(state: RaceState): StrategyResult[] {
 
   const startLap = state.currentLap + 1;
   const compounds: string[] = ['soft', 'medium', 'hard'];
+  const abrasion = getTrackAbrasion(state.trackName);
 
   // Determine the latest lap we'd consider pitting (don't pit in the last 3 laps)
   const lastPitLap = Math.min(state.totalLaps - 3, state.currentLap + 15);
@@ -574,6 +642,7 @@ export function simulatePitStrategies(state: RaceState): StrategyResult[] {
     state.tireWear, state.tireAge, state.currentTire,
     state.fuelRemaining,
     0, state.currentTire,
+    state.trackTemp, abrasion,
   );
   results.push({
     id: 'strat-no-pit',
@@ -599,6 +668,7 @@ export function simulatePitStrategies(state: RaceState): StrategyResult[] {
         state.tireWear, state.tireAge, state.currentTire,
         state.fuelRemaining,
         pitLap, newCompound,
+        state.trackTemp, abrasion,
       );
 
       const offset = pitLap - state.currentLap;

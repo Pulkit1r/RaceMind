@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { RaceState } from '../data';
 import { TIRE_COLORS } from '../data';
+import { getAvailableTracks, type WeatherData } from '../weatherApi';
 import {
   Play, Square, Octagon, Shuffle, Settings,
   ChevronDown, AlertTriangle, Droplets, CircleDot, FlaskConical,
-  Volume2, VolumeX
+  Volume2, VolumeX, MapPin, Key, Wifi, WifiOff, Check, X, Loader
 } from 'lucide-react';
 
 interface ControlPanelProps {
@@ -21,6 +22,11 @@ interface ControlPanelProps {
   onToggleAudio: () => void;
   audioEnabled: boolean;
   isRacing: boolean;
+  onTrackChange: (trackName: string) => void;
+  onApiKeySubmit: (key: string) => void;
+  apiKey: string;
+  liveWeather?: WeatherData | null;
+  weatherLoading?: boolean;
 }
 
 const tireOptions: { value: RaceState['currentTire']; label: string; short: string }[] = [
@@ -72,10 +78,7 @@ function NeonSlider({ value, min, max, step, label, displayValue, onChange, colo
   onChange: (v: number) => void;
   colorClass?: string;
 }) {
-  // Compute fill percentage for track background
   const pct = ((value - min) / (max - min)) * 100;
-
-  // Color mapping for the filled portion
   const fillColor: Record<string, string> = {
     '': 'rgba(168,85,247,0.5)',
     'slider-red': 'rgba(255,51,102,0.5)',
@@ -112,9 +115,16 @@ function NeonSlider({ value, min, max, step, label, displayValue, onChange, colo
 export default function ControlPanel({
   state, onStartRace, onStopRace, onPitNow, onChangeTire,
   onTireWearChange, onWeatherChange, onAlternateStrategy, onOpenWhatIf,
-  onToggleAudio, audioEnabled, isRacing
+  onToggleAudio, audioEnabled, isRacing,
+  onTrackChange, onApiKeySubmit, apiKey, liveWeather, weatherLoading,
 }: ControlPanelProps) {
   const [tireMenuOpen, setTireMenuOpen] = useState(false);
+  const [trackMenuOpen, setTrackMenuOpen] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [localApiKey, setLocalApiKey] = useState(apiKey);
+
+  const tracks = getAvailableTracks();
+  const isLive = liveWeather?.isLive ?? false;
 
   return (
     <motion.aside
@@ -130,6 +140,60 @@ export default function ControlPanel({
           Race Control
         </h2>
       </div>
+
+      {/* === TRACK SELECTOR === */}
+      <div className="space-y-2">
+        <h3 className="font-heading text-[10px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1">
+          <MapPin className="w-3 h-3" /> Circuit
+        </h3>
+        <div className="relative">
+          <button
+            onClick={() => setTrackMenuOpen(!trackMenuOpen)}
+            disabled={isRacing}
+            className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-surface-700/50 border border-surface-500/50 text-xs text-slate-300 hover:border-neon-blue/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="flex items-center gap-2 truncate">
+              <MapPin className="w-3.5 h-3.5 text-neon-blue flex-shrink-0" />
+              <span className="font-heading tracking-wider uppercase text-[10px] truncate">{state.trackName}</span>
+            </div>
+            <ChevronDown className={`w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200 ${trackMenuOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          <AnimatePresence>
+            {trackMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className="absolute top-full mt-1 left-0 right-0 z-50 glass-strong rounded-xl overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.4)] max-h-48 overflow-y-auto"
+              >
+                {tracks.map((track) => (
+                  <button
+                    key={track}
+                    onClick={() => {
+                      onTrackChange(track);
+                      setTrackMenuOpen(false);
+                    }}
+                    disabled={track === state.trackName}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs hover:bg-surface-500/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <MapPin className="w-3 h-3 text-neon-blue/50" />
+                    <span className="font-mono text-slate-300">{track}</span>
+                    {track === state.trackName && (
+                      <Check className="ml-auto w-3 h-3 text-neon-green" />
+                    )}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-neon-blue/20 to-transparent" />
 
       {/* === BUTTONS SECTION === */}
       <div className="space-y-2">
