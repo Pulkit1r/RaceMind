@@ -257,8 +257,8 @@ Each circuit multiplies tire wear differently:
 
 ```javascript
 function thermalWearMultiplier(trackTemp: number): number {
-  const normalizedTemp = (trackTemp - 35) / 20;  // 35°C = baseline
-  return 1.0 + normalizedTemp * 0.12;             // ±12% per 10°C
+  const normalizedTemp = (trackTemp - 35) / 20;  
+  return 1.0 + normalizedTemp * 0.12;          
 }
 ```
 - 55°C track → 1.12× wear (hot = faster degradation)

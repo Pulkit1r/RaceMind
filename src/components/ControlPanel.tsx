@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { RaceState } from '../data';
-import { TIRE_COLORS } from '../data';
+import { TIRE_COLORS, type StrategyGoal } from '../data';
 import { getAvailableTracks, type WeatherData } from '../weatherApi';
 import {
   Play, Square, Octagon, Shuffle, Settings,
   ChevronDown, AlertTriangle, Droplets, CircleDot, FlaskConical,
-  Volume2, VolumeX, MapPin, Key, Wifi, WifiOff, Check, X, Loader
+  Volume2, VolumeX, MapPin, Key, Wifi, WifiOff, Check, X, Loader,
+  Brain, Zap, User as UserIcon, Target, Timer, Shield
 } from 'lucide-react';
 
 interface ControlPanelProps {
@@ -22,6 +23,10 @@ interface ControlPanelProps {
   onToggleAudio: () => void;
   audioEnabled: boolean;
   isRacing: boolean;
+  autoStrategy: boolean;
+  onToggleAutoStrategy: () => void;
+  strategyGoal: StrategyGoal;
+  onStrategyGoalChange: (goal: StrategyGoal) => void;
   onTrackChange: (trackName: string) => void;
   onApiKeySubmit: (key: string) => void;
   apiKey: string;
@@ -116,6 +121,8 @@ export default function ControlPanel({
   state, onStartRace, onStopRace, onPitNow, onChangeTire,
   onTireWearChange, onWeatherChange, onAlternateStrategy, onOpenWhatIf,
   onToggleAudio, audioEnabled, isRacing,
+  autoStrategy, onToggleAutoStrategy,
+  strategyGoal, onStrategyGoalChange,
   onTrackChange, onApiKeySubmit, apiKey, liveWeather, weatherLoading,
 }: ControlPanelProps) {
   const [tireMenuOpen, setTireMenuOpen] = useState(false);
@@ -242,6 +249,66 @@ export default function ControlPanel({
           variant="neutral"
           disabled={!isRacing}
         />
+      </div>
+
+      {/* === AUTO / MANUAL MODE TOGGLE === */}
+      <div className="space-y-1.5">
+        <h3 className="font-heading text-[10px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1">
+          <Brain className="w-3 h-3" /> Strategy Mode
+        </h3>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onToggleAutoStrategy}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-300 font-heading text-xs font-semibold tracking-wider uppercase ${
+            autoStrategy
+              ? 'bg-neon-purple/10 border-neon-purple/30 text-neon-purple hover:bg-neon-purple/20 shadow-[0_0_20px_rgba(168,85,247,0.1)]'
+              : 'bg-surface-600/50 border-surface-500 text-slate-400 hover:bg-surface-500 hover:border-slate-500'
+          }`}
+        >
+          {autoStrategy ? <Zap className="w-4 h-4" /> : <UserIcon className="w-4 h-4" />}
+          <span>{autoStrategy ? 'Auto Mode' : 'Manual Mode'}</span>
+          <span className={`ml-auto w-2 h-2 rounded-full ${autoStrategy ? 'bg-neon-purple animate-neon-pulse' : 'bg-slate-600'}`} />
+        </motion.button>
+        <p className="text-[8px] text-slate-600 font-mono px-1">
+          {autoStrategy
+            ? '🤖 AI will auto-pit when confidence > 85%'
+            : '👤 You control all pit decisions'}
+        </p>
+      </div>
+
+      {/* === STRATEGY GOAL SELECTOR === */}
+      <div className="space-y-1.5">
+        <h3 className="font-heading text-[10px] font-bold tracking-wider text-slate-500 uppercase flex items-center gap-1">
+          <Target className="w-3 h-3" /> Strategy Goal
+        </h3>
+        <div className="grid grid-cols-3 gap-1">
+          {([
+            { value: 'maximize-position' as StrategyGoal, icon: <Target className="w-3.5 h-3.5" />, label: 'Position', bg: 'rgba(255,51,102,0.1)', border: 'rgba(255,51,102,0.3)', text: '#ff3366' },
+            { value: 'minimize-time' as StrategyGoal, icon: <Timer className="w-3.5 h-3.5" />, label: 'Lap Time', bg: 'rgba(0,212,255,0.1)', border: 'rgba(0,212,255,0.3)', text: '#00d4ff' },
+            { value: 'low-risk' as StrategyGoal, icon: <Shield className="w-3.5 h-3.5" />, label: 'Low Risk', bg: 'rgba(0,255,136,0.1)', border: 'rgba(0,255,136,0.3)', text: '#00ff88' },
+          ]).map((opt) => (
+            <motion.button
+              key={opt.value}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onStrategyGoalChange(opt.value)}
+              className="flex flex-col items-center gap-1 px-2 py-2 rounded-lg border transition-all duration-300 text-[8px] font-heading font-bold tracking-wider uppercase"
+              style={strategyGoal === opt.value
+                ? { backgroundColor: opt.bg, borderColor: opt.border, color: opt.text, boxShadow: `0 0 12px ${opt.bg}` }
+                : { backgroundColor: 'rgba(30,41,59,0.3)', borderColor: 'rgba(71,85,105,0.3)', color: '#64748b' }
+              }
+            >
+              {opt.icon}
+              <span>{opt.label}</span>
+            </motion.button>
+          ))}
+        </div>
+        <p className="text-[8px] text-slate-600 font-mono px-1">
+          {strategyGoal === 'maximize-position' ? '🎯 Aggressive: prioritize overtakes & position gains'
+            : strategyGoal === 'minimize-time' ? '⏱️ Optimal: pure time-based strategy'
+            : '🛡️ Conservative: minimize risk, protect positions'}
+        </p>
       </div>
 
       {/* Audio Toggle */}

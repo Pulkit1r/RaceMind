@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { AIRecommendation, StrategyResult, RaceState } from '../data';
+import type { StrategyAdjustment } from '../raceMemory';
 import StrategyPanel from './StrategyPanel';
 import {
   Brain, AlertTriangle, TrendingUp, Fuel, CloudRain,
@@ -12,6 +13,7 @@ interface AIPanelProps {
   recommendations: AIRecommendation[];
   strategies: StrategyResult[];
   state: RaceState;
+  trackAdjustment?: StrategyAdjustment;
 }
 
 const typeConfig: Record<string, { icon: React.ReactNode; accentClass: string }> = {
@@ -296,11 +298,12 @@ function getComputedColor(accentClass: string): string {
   return map[accentClass] || '#a855f7';
 }
 
-export default function AIPanel({ recommendations, strategies = [], state }: AIPanelProps) {
+export default function AIPanel({ recommendations, strategies = [], state, trackAdjustment }: AIPanelProps) {
   const hasStrategies = strategies.length > 0;
   const isRacing = state.raceStatus === 'racing';
   const isEarlyRace = isRacing && state.currentLap > 0 && state.currentLap < 3;
   const showThinking = isRacing && recommendations.length === 0 && !hasStrategies && isEarlyRace;
+  const hasMemory = trackAdjustment && trackAdjustment.experienceLevel !== 'none';
 
   return (
     <motion.aside
@@ -358,6 +361,35 @@ export default function AIPanel({ recommendations, strategies = [], state }: AIP
           />
         </div>
       </div>
+
+      {/* Track Memory Insight */}
+      {trackAdjustment && (
+        <div className={`mb-3 p-2 rounded-lg border text-[9px] ${
+          hasMemory
+            ? 'bg-neon-blue/5 border-neon-blue/15'
+            : 'bg-surface-700/30 border-surface-500/20'
+        }`}>
+          <div className="flex items-center gap-1.5 mb-1">
+            <span className="text-[8px]">🧠</span>
+            <span className={`font-heading uppercase tracking-wider font-bold ${
+              hasMemory ? 'text-neon-blue' : 'text-slate-500'
+            }`}>
+              Track Memory
+              {hasMemory && (
+                <span className="ml-1 text-[7px] px-1 py-0.5 rounded bg-neon-blue/10 text-neon-blue border border-neon-blue/20">
+                  {trackAdjustment.experienceLevel.toUpperCase()}
+                </span>
+              )}
+            </span>
+            {trackAdjustment.confidenceBoost > 0 && (
+              <span className="ml-auto font-mono text-neon-green font-bold">+{trackAdjustment.confidenceBoost}%</span>
+            )}
+          </div>
+          <p className="text-slate-400 font-mono leading-relaxed">
+            {trackAdjustment.trackInsight}
+          </p>
+        </div>
+      )}
 
       {/* Keyboard shortcut hints */}
       {isRacing && (

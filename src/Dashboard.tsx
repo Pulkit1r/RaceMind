@@ -29,7 +29,16 @@ import {
   type RadioMessage,
   type AIRecommendation,
   type StrategyResult,
+  type StrategyGoal,
 } from './data';
+import {
+  saveRaceResult,
+  createRaceMemoryEntry,
+  getStrategyAdjustment,
+  getRaceCount,
+  loadRaceHistory,
+  type StrategyAdjustment,
+} from './raceMemory';
 
 export default function Dashboard() {
   const [raceState, setRaceState] = useState<RaceState>({ ...initialRaceState });
@@ -41,6 +50,9 @@ export default function Dashboard() {
   const [showWhatIf, setShowWhatIf] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
+  const [autoStrategy, setAutoStrategy] = useState(false);
+  const [strategyGoal, setStrategyGoal] = useState<StrategyGoal>('minimize-time');
+  const autoStratCooldownRef = useRef(0); // prevents rapid auto-pits
   const [liveWeather, setLiveWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState(getWeatherApiKey());
@@ -48,6 +60,24 @@ export default function Dashboard() {
   const weatherIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const prevTireWearRef = useRef(100);
   const prevRainRef = useRef(0);
+  const autoStrategyRef = useRef(false);
+  const pitStopLapsRef = useRef<number[]>([]);
+  const compoundsUsedRef = useRef<string[]>(['medium']);
+  const tireWearAtPitsRef = useRef<number[]>([]);
+  const lapDataRef = useRef<LapData[]>([]);
+  const [trackAdjustment, setTrackAdjustment] = useState<StrategyAdjustment>(
+    getStrategyAdjustment(initialRaceState.trackName)
+  );
+
+  // Keep ref in sync with state for use inside setRaceState callback
+  useEffect(() => {
+    autoStrategyRef.current = autoStrategy;
+  }, [autoStrategy]);
+
+  const strategyGoalRef = useRef<StrategyGoal>('minimize-time');
+  useEffect(() => {
+    strategyGoalRef.current = strategyGoal;
+  }, [strategyGoal]);
 
   // ─── Weather fetching ─────────────────────────────────────────────────────
   const fetchWeather = useCallback(async (trackName: string) => {
@@ -109,6 +139,52 @@ export default function Dashboard() {
       if (prev.currentLap >= prev.totalLaps) {
         setIsRacing(false);
         if (intervalRef.current) clearInterval(intervalRef.current);
+
+        // ── Save race to memory ──
+        const history = loadRaceHistory();
+        const ldRef = lapDataRef.current;
+        const avgLap = ldRef.length > 0
+          ? ldRef.reduce((s: number, l: LapData) => s + l.time, 0) / ldRef.length
+          : 0;
+        const lapTimes = ldRef.map((l: LapData) => l.time);
+        const mean = avgLap;
+        const variance = lapTimes.length > 1
+          ? lapTimes.reduce((s: number, t: number) => s + (t - mean) ** 2, 0) / lapTimes.length
+          : 0;
+        const consistency = Math.sqrt(variance);
+
+        const grade = prev.position <= 1 ? 'S'
+          : prev.position <= 3 ? 'A'
+          : prev.position <= 6 ? 'B'
+          : prev.position <= 10 ? 'C' : 'D';
+
+        const entry = createRaceMemoryEntry({
+          trackName: prev.trackName,
+          driverName: prev.driverName,
+          finalPosition: prev.position,
+          startPosition: 3, // default starting position
+          totalLaps: prev.totalLaps,
+          totalPitStops: prev.pitStops,
+          tireCompoundsUsed: [...compoundsUsedRef.current],
+          pitStopLaps: [...pitStopLapsRef.current],
+          avgTireWearAtPit: tireWearAtPitsRef.current.length > 0
+            ? tireWearAtPitsRef.current.reduce((s, w) => s + w, 0) / tireWearAtPitsRef.current.length
+            : 0,
+          fastestLap: prev.fastestLap,
+          avgLapTime: avgLap,
+          consistency,
+          weather: prev.weather,
+          rainEncountered: prev.weather.includes('rain'),
+          aiRecsFollowed: prev.pitStops,
+          aiRecsIgnored: 0,
+          autoStrategyUsed: autoStrategyRef.current,
+          strategyGrade: grade,
+        });
+        saveRaceResult(entry);
+
+        // Update track adjustment for next race
+        setTrackAdjustment(getStrategyAdjustment(prev.trackName));
+
         // Show result screen after a short delay for dramatic effect
         setTimeout(() => setShowResult(true), 500);
         return { ...prev, raceStatus: 'finished' };
@@ -155,7 +231,11 @@ export default function Dashboard() {
         position: newPos,
         gap: parseFloat((Math.random() * 3).toFixed(1)),
       };
-      setLapData((prevData) => [...prevData, newLapData]);
+      setLapData((prevData) => {
+        const updated = [...prevData, newLapData];
+        lapDataRef.current = updated;
+        return updated;
+      });
 
       // ── Radio messages ──
       if (Math.random() > 0.5) {
@@ -167,7 +247,7 @@ export default function Dashboard() {
       let rainChance = prev.rainChance + (Math.random() - 0.48) * 4;
       rainChance = Math.max(0, Math.min(100, rainChance));
 
-      const newState: RaceState = {
+      let newState: RaceState = {
         ...prev,
         currentLap: newLap,
         position: newPos,
@@ -189,8 +269,50 @@ export default function Dashboard() {
       // ── Run strategy engine then feed results into recommendations ──
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
-      const recs = generateRecommendations(newState, strats);
+      const recs = generateRecommendations(newState, strats, strategyGoalRef.current);
+
+      // Apply confidence boost from track learning memory
+      const boost = trackAdjustment.confidenceBoost;
+      if (boost > 0) {
+        recs.forEach((r: AIRecommendation) => {
+          r.confidence = Math.min(98, r.confidence + boost);
+        });
+      }
       setRecommendations(recs);
+
+      // ── AUTO STRATEGY MODE ──
+      // If auto mode is on and a BOX recommendation has confidence > 85%, auto-execute pit
+      if (autoStratCooldownRef.current > 0) {
+        autoStratCooldownRef.current--;
+      }
+      const autoRec = recs.find(r => r.title.includes('BOX') && r.confidence > 85);
+      if (autoRec && autoStratCooldownRef.current <= 0) {
+        // Check autoStrategy via ref to get latest value inside setRaceState callback
+        const isAutoMode = autoStrategyRef.current;
+        if (isAutoMode) {
+          autoStratCooldownRef.current = 8; // cooldown: no auto-pit for 8 laps
+          const autoPitCompound = autoRec.title.includes('SOFT') ? 'soft'
+            : autoRec.title.includes('HARD') ? 'hard' : 'medium';
+          newState = {
+            ...newState,
+            currentTire: autoPitCompound as RaceState['currentTire'],
+            tireAge: 0,
+            tireWear: 100,
+            pitStops: newState.pitStops + 1,
+            lastPitLap: newLap,
+          };
+
+          const autoMsg: RadioMessage = {
+            id: `auto-pit-${Date.now()}`,
+            time: `LAP ${newLap}`,
+            from: 'ai',
+            message: `🤖 AI AUTO-PIT: Confidence ${autoRec.confidence}%. Switching to ${autoPitCompound.toUpperCase()} compound. AI executed pit stop.`,
+            priority: 'critical',
+          };
+          setRadioMessages((msgs) => [...msgs.slice(-19), autoMsg]);
+          fireAlert({ level: 'critical', message: `AI executed pit stop. Switching to ${autoPitCompound} compound. Confidence ${autoRec.confidence} percent.` });
+        }
+      }
 
       // ── Audio alerts based on state changes ──
       // Critical tire wear threshold
@@ -229,11 +351,19 @@ export default function Dashboard() {
     setIsRacing(true);
     setRaceState((prev) => ({ ...prev, raceStatus: 'racing', currentLap: 0 }));
     setLapData([]);
+    lapDataRef.current = [];
     setRadioMessages([]);
     setRecommendations([]);
     setStrategies([]);
     prevTireWearRef.current = 100;
     prevRainRef.current = 0;
+    pitStopLapsRef.current = [];
+    compoundsUsedRef.current = [initialRaceState.currentTire];
+    tireWearAtPitsRef.current = [];
+    autoStratCooldownRef.current = 0;
+
+    // Load track memory for this race
+    setTrackAdjustment(getStrategyAdjustment(raceState.trackName));
 
     fireAlert({ level: 'race-start' });
 
@@ -268,6 +398,11 @@ export default function Dashboard() {
       };
       setRadioMessages((msgs) => [...msgs.slice(-19), pitMsg]);
 
+      // Track pit stop for memory system
+      pitStopLapsRef.current.push(prev.currentLap);
+      compoundsUsedRef.current.push(nextTire);
+      tireWearAtPitsRef.current.push(prev.tireWear);
+
       const newState = {
         ...prev,
         currentTire: nextTire as RaceState['currentTire'],
@@ -278,7 +413,7 @@ export default function Dashboard() {
       };
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
-      setRecommendations(generateRecommendations(newState, strats));
+      setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
       return newState;
     });
   }, []);
@@ -304,7 +439,7 @@ export default function Dashboard() {
       };
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
-      setRecommendations(generateRecommendations(newState, strats));
+      setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
       return newState;
     });
   }, []);
@@ -315,7 +450,7 @@ export default function Dashboard() {
       const newState = { ...prev, tireWear: wear };
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
-      setRecommendations(generateRecommendations(newState, strats));
+      setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
       return newState;
     });
   }, []);
@@ -327,7 +462,7 @@ export default function Dashboard() {
       const newState = { ...prev, rainChance, weather };
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
-      setRecommendations(generateRecommendations(newState, strats));
+      setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
 
       // Fire a radio message when crossing thresholds
       if ((prev.rainChance <= 60 && rainChance > 60) || (prev.rainChance <= 90 && rainChance > 90)) {
@@ -404,7 +539,7 @@ export default function Dashboard() {
       };
       const strats = simulatePitStrategies(newState);
       setStrategies(strats);
-      setRecommendations([altRec, ...generateRecommendations(newState, strats)]);
+      setRecommendations([altRec, ...generateRecommendations(newState, strats, strategyGoalRef.current)]);
 
       return newState;
     });
@@ -495,6 +630,10 @@ export default function Dashboard() {
               onToggleAudio={handleToggleAudio}
               audioEnabled={audioEnabled}
               isRacing={isRacing}
+              autoStrategy={autoStrategy}
+              onToggleAutoStrategy={() => setAutoStrategy(prev => !prev)}
+              strategyGoal={strategyGoal}
+              onStrategyGoalChange={setStrategyGoal}
               onTrackChange={handleTrackChange}
               onApiKeySubmit={handleApiKeySubmit}
               apiKey={apiKeyInput}
@@ -510,7 +649,7 @@ export default function Dashboard() {
 
           {/* Right Panel - AI */}
           <div className="w-[340px] flex-shrink-0">
-            <AIPanel recommendations={recommendations} strategies={strategies} state={raceState} />
+            <AIPanel recommendations={recommendations} strategies={strategies} state={raceState} trackAdjustment={trackAdjustment} />
           </div>
         </div>
 

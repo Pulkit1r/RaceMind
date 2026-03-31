@@ -154,6 +154,8 @@ export interface AIRecommendation {
   urgent: boolean;
 }
 
+export type StrategyGoal = 'maximize-position' | 'minimize-time' | 'low-risk';
+
 export interface RaceState {
   driverName: string;
   teamName: string;
@@ -304,11 +306,19 @@ export function generateRadioMessage(lap: number): RadioMessage {
 export function generateRecommendations(
   state: RaceState,
   strategies: StrategyResult[] = [],
+  goal: StrategyGoal = 'minimize-time',
 ): AIRecommendation[] {
   const recs: AIRecommendation[] = [];
   const remainingLaps = state.totalLaps - state.currentLap;
 
-  // ─── Primary call: BOX BOX vs STAY OUT (from strategy engine) ─────────────
+  // Goal-based modifiers
+  const goalMod = {
+    'maximize-position': { pitBias: 10, riskTolerance: 0.7, aggressiveness: 1.3 },
+    'minimize-time':     { pitBias: 0,  riskTolerance: 1.0, aggressiveness: 1.0 },
+    'low-risk':          { pitBias: -8, riskTolerance: 1.4, aggressiveness: 0.6 },
+  }[goal];
+
+  // ── Primary call: BOX BOX vs STAY OUT (from strategy engine) ──────────────
   if (strategies.length > 0 && remainingLaps > 3) {
     const best = strategies[0];
     const stayOut = strategies.find(s => s.pitLap === 0);
@@ -320,26 +330,39 @@ export function generateRecommendations(
       const pitOffset = best.pitLap - state.currentLap;
       const isImmediate = pitOffset <= 1;
 
-      // Confidence: high when delta is large + tires are worn
+      // Confidence: based on goal
       const wearFactor = Math.min(30, (100 - state.tireWear) * 0.4);
       const timeFactor = Math.min(40, timeSaved * 3);
-      const confidence = Math.min(98, Math.round(30 + wearFactor + timeFactor));
+      let confidence = Math.min(98, Math.round(30 + wearFactor + timeFactor + goalMod.pitBias));
+
+      // Maximize-position: boost pit confidence if we might gain positions
+      if (goal === 'maximize-position' && state.gapAhead < 2.0) {
+        confidence = Math.min(98, confidence + 8);
+      }
+      // Low-risk: reduce pit confidence (prefer staying out unless critical)
+      if (goal === 'low-risk' && state.tireWear > 35) {
+        confidence = Math.max(30, confidence - 12);
+      }
 
       const reasons: string[] = [];
       reasons.push(`Tire wear at ${state.tireWear.toFixed(0)}% on ${state.currentTire}s`);
       if (timeSaved > 0) reasons.push(`pit saves ${timeSaved.toFixed(1)}s vs staying out`);
       reasons.push(`switch → ${best.tiresAfter.toUpperCase()} compound`);
       if (!isImmediate) reasons.push(`optimal window: lap ${best.pitLap} (+${pitOffset} laps)`);
+      if (goal === 'maximize-position') reasons.push('🎯 Goal: maximize position gains');
+      if (goal === 'low-risk') reasons.push('🛡️ Goal: low-risk conservative approach');
 
       recs.push({
         id: 'rec-box-box',
         type: 'pit',
         title: isImmediate ? '🟥 BOX BOX BOX' : `🟨 BOX LAP ${best.pitLap}`,
         description: reasons.join('. ') + '.',
-        risk: state.tireWear < 20 ? 'high' : state.tireWear < 40 ? 'medium' : 'low',
+        risk: goal === 'low-risk'
+          ? (state.tireWear < 15 ? 'high' : 'medium')
+          : (state.tireWear < 20 ? 'high' : state.tireWear < 40 ? 'medium' : 'low'),
         confidence,
         timestamp: new Date().toISOString(),
-        urgent: isImmediate && state.tireWear < 30,
+        urgent: isImmediate && state.tireWear < (goal === 'low-risk' ? 40 : 30),
       });
     } else {
       // Strategy engine says STAY OUT is optimal
@@ -351,17 +374,21 @@ export function generateRecommendations(
       if (timeCost > 0) reasons.push(`pitting would cost +${timeCost.toFixed(1)}s`);
       reasons.push(`${remainingLaps} laps remaining on ${state.currentTire}s`);
       if (state.tireWear > 50) reasons.push('tire life sufficient to finish');
+      if (goal === 'low-risk') reasons.push('🛡️ Conservative: holding position, no unnecessary risk');
+      if (goal === 'maximize-position') reasons.push('🎯 Gap management: protecting current position');
 
-      const confidence = Math.min(95, Math.round(
+      let confidence = Math.min(95, Math.round(
         50 + (state.tireWear * 0.3) + (timeCost > 5 ? 20 : timeCost * 4)
       ));
+      // Low-risk: boost stay-out confidence
+      if (goal === 'low-risk') confidence = Math.min(98, confidence + 10);
 
       recs.push({
         id: 'rec-stay-out',
         type: 'pace',
         title: '🟩 STAY OUT',
         description: reasons.join('. ') + '.',
-        risk: state.tireWear < 30 ? 'high' : state.tireWear < 50 ? 'medium' : 'low',
+        risk: goal === 'low-risk' ? 'low' : (state.tireWear < 30 ? 'high' : state.tireWear < 50 ? 'medium' : 'low'),
         confidence,
         timestamp: new Date().toISOString(),
         urgent: false,
@@ -409,15 +436,19 @@ export function generateRecommendations(
 
   // ─── Overtake window ──────────────────────────────────────────────────────
   if (state.gapAhead < 1.0 && state.drs) {
+    let overtakeConfidence = Math.round(60 + (1.0 - state.gapAhead) * 30);
+    if (goal === 'maximize-position') overtakeConfidence = Math.min(98, overtakeConfidence + 12);
+    if (goal === 'low-risk') overtakeConfidence = Math.max(40, overtakeConfidence - 15);
+
     recs.push({
       id: 'rec-overtake',
       type: 'overtake',
-      title: '⚡ OVERTAKE WINDOW',
-      description: `Gap to P${state.position - 1}: ${state.gapAhead.toFixed(1)}s with DRS active. Attack recommended through sector 1. Undercut momentum available.`,
-      risk: 'medium',
-      confidence: Math.round(60 + (1.0 - state.gapAhead) * 30),
+      title: goal === 'maximize-position' ? '⚡ ATTACK NOW' : '⚡ OVERTAKE WINDOW',
+      description: `Gap to P${state.position - 1}: ${state.gapAhead.toFixed(1)}s with DRS active. ${goal === 'maximize-position' ? 'Deploy full ERS — ATTACK MODE!' : goal === 'low-risk' ? 'Opportunity available but assess risk before committing.' : 'Attack recommended through sector 1. Undercut momentum available.'}`,
+      risk: goal === 'low-risk' ? 'high' : 'medium',
+      confidence: overtakeConfidence,
       timestamp: new Date().toISOString(),
-      urgent: false,
+      urgent: goal === 'maximize-position',
     });
   }
 
