@@ -24,12 +24,16 @@ import {
   computeTireWear,
   computeLapTime,
   getTrackAbrasion,
+  initializeCompetitors,
+  simulateCompetitorLap,
+  computePositionFromCompetitors,
   type RaceState,
   type LapData,
   type RadioMessage,
   type AIRecommendation,
   type StrategyResult,
   type StrategyGoal,
+  type Competitor,
 } from './data';
 import {
   saveRaceResult,
@@ -68,6 +72,20 @@ export default function Dashboard() {
   const [trackAdjustment, setTrackAdjustment] = useState<StrategyAdjustment>(
     getStrategyAdjustment(initialRaceState.trackName)
   );
+  const competitorsRef = useRef<Competitor[]>([]);
+  const playerCumulativeTimeRef = useRef(0);
+
+  // Compute grip factor from current weather conditions
+  function getGripFactor(state: RaceState): number {
+    let grip = 1.0;
+    if (state.airTemp < 15) grip -= 0.08;
+    else if (state.airTemp < 20) grip -= 0.04;
+    else if (state.airTemp > 40) grip -= 0.03;
+    if (state.rainChance > 80) grip -= 0.35;
+    else if (state.rainChance > 60) grip -= 0.20;
+    else if (state.rainChance > 40) grip -= 0.05;
+    return Math.max(0.45, Math.min(1.0, grip));
+  }
 
   // Keep ref in sync with state for use inside setRaceState callback
   useEffect(() => {
@@ -192,33 +210,41 @@ export default function Dashboard() {
 
       const newLap = prev.currentLap + 1;
 
-      // ── Tire degradation (compound + track + temperature aware) ──
-      const newTireWear = computeTireWear(prev.tireWear, prev.tireAge, prev.currentTire, prev.trackTemp, getTrackAbrasion(prev.trackName));
+      // ── Compute grip factor from weather ──
+      const gripFactor = getGripFactor(prev);
+      const abrasion = getTrackAbrasion(prev.trackName);
+
+      // ── Tire degradation (compound + track + temperature + grip aware) ──
+      const newTireWear = computeTireWear(prev.tireWear, prev.tireAge, prev.currentTire, prev.trackTemp, abrasion, gripFactor);
 
       // ── Fuel consumption ──
       const fuel = Math.max(0, prev.fuelRemaining - 1.4);
 
-      // ── Lap time from physics model ──
+      // ── Lap time from physics model (now grip-aware) ──
       const { lapTime, s1, s2, s3 } = computeLapTime(
         newTireWear,
         prev.currentTire,
         fuel,
+        gripFactor,
       );
 
-      // ── Position battles (tire-state-dependent) ──
-      let newPos = prev.position;
-      // ~30% chance of position change each lap
-      if (Math.random() > 0.70) {
-        // Fresh tires → more likely to gain; worn tires → more likely to lose
-        const tireAdvantage = newTireWear > 60 ? 0.65 : newTireWear > 30 ? 0.5 : 0.3;
-        if (Math.random() < tireAdvantage) {
-          // Gain position (overtake)
-          newPos = Math.max(1, newPos - 1);
-        } else {
-          // Lose position (get overtaken)
-          newPos = Math.min(20, newPos + 1);
-        }
-      }
+      // ── Update player cumulative time ──
+      playerCumulativeTimeRef.current += lapTime;
+
+      // ── Simulate all 19 competitors using same physics ──
+      const updatedCompetitors = competitorsRef.current.map(comp =>
+        simulateCompetitorLap(comp, newLap, prev.trackTemp, abrasion, gripFactor)
+      );
+      competitorsRef.current = updatedCompetitors;
+
+      // ── Compute real position and gaps from competitor times ──
+      const { position: newPos, gapAhead, gapBehind } = computePositionFromCompetitors(
+        playerCumulativeTimeRef.current,
+        updatedCompetitors,
+      );
+
+      // ── DRS: available when gap to car ahead < 1.0s ──
+      const drsActive = gapAhead < 1.0 && gapAhead > 0;
 
       const newLapData: LapData = {
         lap: newLap,
@@ -229,7 +255,7 @@ export default function Dashboard() {
         sector2: s2,
         sector3: s3,
         position: newPos,
-        gap: parseFloat((Math.random() * 3).toFixed(1)),
+        gap: gapAhead,
       };
       setLapData((prevData) => {
         const updated = [...prevData, newLapData];
@@ -256,18 +282,18 @@ export default function Dashboard() {
         fuelRemaining: fuel,
         rainChance: parseFloat(rainChance.toFixed(0)),
         trackTemp: prev.trackTemp + (Math.random() - 0.5) * 0.5,
-        drs: Math.random() > 0.6,
+        drs: drsActive,
         ersDeployment: Math.max(0, Math.min(100, prev.ersDeployment + (Math.random() - 0.4) * 10)),
-        gapAhead: Math.max(0.1, prev.gapAhead + (Math.random() - 0.5) * 0.4),
-        gapBehind: Math.max(0.1, prev.gapBehind + (Math.random() - 0.5) * 0.3),
+        gapAhead,
+        gapBehind,
         fastestLap: Math.min(prev.fastestLap, lapTime),
         personalBest: Math.min(prev.personalBest, lapTime),
         raceStatus: 'racing',
         weather: rainChance > 90 ? 'heavy-rain' : rainChance > 60 ? 'light-rain' : rainChance > 35 ? 'cloudy' : 'sunny',
       };
 
-      // ── Run strategy engine then feed results into recommendations ──
-      const strats = simulatePitStrategies(newState);
+      // ── Run strategy engine (now with grip + learning feedback) ──
+      const strats = simulatePitStrategies(newState, gripFactor, trackAdjustment);
       setStrategies(strats);
       const recs = generateRecommendations(newState, strats, strategyGoalRef.current);
 
@@ -361,6 +387,10 @@ export default function Dashboard() {
     compoundsUsedRef.current = [initialRaceState.currentTire];
     tireWearAtPitsRef.current = [];
     autoStratCooldownRef.current = 0;
+    playerCumulativeTimeRef.current = 0;
+
+    // Initialize 19 AI competitors with varied strategies
+    competitorsRef.current = initializeCompetitors(initialRaceState.totalLaps);
 
     // Load track memory for this race
     setTrackAdjustment(getStrategyAdjustment(raceState.trackName));
@@ -382,6 +412,28 @@ export default function Dashboard() {
     setIsRacing(false);
     if (intervalRef.current) clearInterval(intervalRef.current);
     setRaceState((prev) => ({ ...prev, raceStatus: 'finished' }));
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setIsRacing(false);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    
+    // Reset all state to initial values
+    setRaceState({ ...initialRaceState });
+    setLapData([]);
+    lapDataRef.current = [];
+    setRadioMessages([]);
+    setRecommendations([]);
+    setStrategies([]);
+    prevTireWearRef.current = 100;
+    prevRainRef.current = 0;
+    pitStopLapsRef.current = [];
+    compoundsUsedRef.current = [initialRaceState.currentTire];
+    tireWearAtPitsRef.current = [];
+    autoStratCooldownRef.current = 0;
+    playerCumulativeTimeRef.current = 0;
+    competitorsRef.current = [];
+    setLiveWeather(null);
   }, []);
 
   const handlePitNow = useCallback(() => {
@@ -411,7 +463,8 @@ export default function Dashboard() {
         pitStops: prev.pitStops + 1,
         lastPitLap: prev.currentLap,
       };
-      const strats = simulatePitStrategies(newState);
+      const gf = getGripFactor(newState);
+      const strats = simulatePitStrategies(newState, gf, trackAdjustment);
       setStrategies(strats);
       setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
       return newState;
@@ -437,7 +490,8 @@ export default function Dashboard() {
         pitStops: prev.pitStops + 1,
         lastPitLap: prev.currentLap,
       };
-      const strats = simulatePitStrategies(newState);
+      const gf = getGripFactor(newState);
+      const strats = simulatePitStrategies(newState, gf, trackAdjustment);
       setStrategies(strats);
       setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
       return newState;
@@ -448,7 +502,8 @@ export default function Dashboard() {
   const handleTireWearChange = useCallback((wear: number) => {
     setRaceState((prev) => {
       const newState = { ...prev, tireWear: wear };
-      const strats = simulatePitStrategies(newState);
+      const gf = getGripFactor(newState);
+      const strats = simulatePitStrategies(newState, gf, trackAdjustment);
       setStrategies(strats);
       setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
       return newState;
@@ -460,7 +515,8 @@ export default function Dashboard() {
       const weather: RaceState['weather'] =
         rainChance > 90 ? 'heavy-rain' : rainChance > 60 ? 'light-rain' : rainChance > 35 ? 'cloudy' : 'sunny';
       const newState = { ...prev, rainChance, weather };
-      const strats = simulatePitStrategies(newState);
+      const gf = getGripFactor(newState);
+      const strats = simulatePitStrategies(newState, gf, trackAdjustment);
       setStrategies(strats);
       setRecommendations(generateRecommendations(newState, strats, strategyGoalRef.current));
 
@@ -537,7 +593,8 @@ export default function Dashboard() {
         timestamp: new Date().toISOString(),
         urgent: alt.tire === 'soft',
       };
-      const strats = simulatePitStrategies(newState);
+      const gf = getGripFactor(newState);
+      const strats = simulatePitStrategies(newState, gf, trackAdjustment);
       setStrategies(strats);
       setRecommendations([altRec, ...generateRecommendations(newState, strats, strategyGoalRef.current)]);
 
@@ -628,6 +685,7 @@ export default function Dashboard() {
               onAlternateStrategy={handleAlternateStrategy}
               onOpenWhatIf={() => setShowWhatIf(true)}
               onToggleAudio={handleToggleAudio}
+              onReset={handleReset}
               audioEnabled={audioEnabled}
               isRacing={isRacing}
               autoStrategy={autoStrategy}

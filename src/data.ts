@@ -1,4 +1,5 @@
 // Simulated race data store + utilities
+import type { StrategyAdjustment } from './raceMemory';
 
 // ─── Tire Degradation Model ──────────────────────────────────────────────────
 // Each compound has:
@@ -69,7 +70,7 @@ function thermalWearMultiplier(trackTemp: number): number {
 /**
  * Compute tire wear remaining after one more lap on the current compound.
  * Degradation accelerates with tire age (quadratic cliff).
- * Now factors in track surface abrasion and track temperature.
+ * Now factors in track surface abrasion, track temperature, and grip conditions.
  */
 export function computeTireWear(
   currentWear: number,
@@ -77,24 +78,31 @@ export function computeTireWear(
   compound: string,
   trackTemp: number = 40,
   abrasionCoeff: number = 1.0,
+  gripFactor: number = 1.0,
 ): number {
   const model = TIRE_MODELS[compound] ?? TIRE_MODELS.medium;
   // Base wear rate increases each lap: base + accel * age → simulates the "cliff"
   const baseWear = model.wearPerLap + model.wearAccel * tireAge;
   // Apply track-specific multipliers
   const thermalFactor = thermalWearMultiplier(trackTemp);
-  const wearThisLap = baseWear * abrasionCoeff * thermalFactor;
+  // Wet conditions change wear: intermediates/wets degrade less in rain,
+  // dry compounds on wet track degrade faster due to aquaplaning stress
+  const wetWearMod = gripFactor < 0.85
+    ? (compound === 'inter' || compound === 'wet' ? 0.8 : 1.25)
+    : 1.0;
+  const wearThisLap = baseWear * abrasionCoeff * thermalFactor * wetWearMod;
   return Math.max(0, currentWear - wearThisLap);
 }
 
 /**
  * Compute lap time from current state.
- * Formula: base_time + compound_offset + tire_degradation_penalty + fuel_effect + noise
+ * Formula: base_time + compound_offset + tire_degradation_penalty + fuel_effect + grip_penalty + noise
  */
 export function computeLapTime(
   tireWear: number,
   compound: string,
   fuelRemaining: number,
+  gripFactor: number = 1.0,
 ): { lapTime: number; s1: number; s2: number; s3: number } {
   const model = TIRE_MODELS[compound] ?? TIRE_MODELS.medium;
 
@@ -105,10 +113,21 @@ export function computeLapTime(
   // Fuel effect: lighter car = faster (up to ~1.4s advantage when empty)
   const fuelEffect = -((FUEL_LOAD_FULL - fuelRemaining) / FUEL_LOAD_FULL) * 1.4;
 
+  // Grip penalty: low grip (rain, cold) slows the car significantly
+  // gripFactor 1.0 = perfect grip (0s penalty), 0.45 = heavy rain (+4.4s penalty)
+  const gripPenalty = (1.0 - gripFactor) * 8.0;
+
+  // Wrong tires in wet: dry compounds on wet track add extra penalty
+  const wrongTirePenalty = gripFactor < 0.85 && compound !== 'inter' && compound !== 'wet'
+    ? (1.0 - gripFactor) * 12.0   // up to +6.6s extra if on slicks in rain
+    : gripFactor < 0.85 && compound === 'wet' && gripFactor > 0.7
+      ? 1.5  // wets on slightly damp track are slow
+      : 0;
+
   // Small random variation (driver inconsistency)
   const noise = (Math.random() - 0.5) * 0.6;
 
-  const lapTime = BASE_LAP_TIME + model.baseOffset + tirePenalty + fuelEffect + noise;
+  const lapTime = BASE_LAP_TIME + model.baseOffset + tirePenalty + fuelEffect + gripPenalty + wrongTirePenalty + noise;
 
   // Distribute across 3 sectors (32% / 38% / 30%)
   const s1 = lapTime * 0.32 + (Math.random() - 0.5) * 0.15;
@@ -514,12 +533,19 @@ function predictLapTime(
   tireWear: number,
   compound: string,
   fuelRemaining: number,
+  gripFactor: number = 1.0,
 ): number {
   const model = TIRE_MODELS[compound] ?? TIRE_MODELS.medium;
   const wearLost = 100 - tireWear;
   const tirePenalty = wearLost * model.lapTimePenalty;
   const fuelEffect = -((FUEL_LOAD_FULL - fuelRemaining) / FUEL_LOAD_FULL) * 1.4;
-  return BASE_LAP_TIME + model.baseOffset + tirePenalty + fuelEffect;
+  const gripPenalty = (1.0 - gripFactor) * 8.0;
+  const wrongTirePenalty = gripFactor < 0.85 && compound !== 'inter' && compound !== 'wet'
+    ? (1.0 - gripFactor) * 12.0
+    : gripFactor < 0.85 && compound === 'wet' && gripFactor > 0.7
+      ? 1.5
+      : 0;
+  return BASE_LAP_TIME + model.baseOffset + tirePenalty + fuelEffect + gripPenalty + wrongTirePenalty;
 }
 
 // Overload that accepts track conditions for strategy engine
@@ -529,11 +555,12 @@ function predictLapTimeWithTrack(
   fuelRemaining: number,
   trackTemp: number,
   abrasionCoeff: number,
+  gripFactor: number = 1.0,
 ): number {
   // Track conditions already factored into tire wear calc,
   // but hot tracks also reduce aero efficiency slightly
   const heatPenalty = Math.max(0, (trackTemp - 45) * 0.008); // ~0.04s penalty per 5°C above 45
-  return predictLapTime(tireWear, compound, fuelRemaining) + heatPenalty;
+  return predictLapTime(tireWear, compound, fuelRemaining, gripFactor) + heatPenalty;
 }
 
 /**
@@ -550,6 +577,7 @@ export function simulateStint(
   newCompound: string,
   trackTemp: number = 40,
   abrasionCoeff: number = 1.0,
+  gripFactor: number = 1.0,
 ): { totalTime: number; lapTimes: number[] } {
   let wear = currentWear;
   let tireAge = currentTireAge;
@@ -567,11 +595,11 @@ export function simulateStint(
       compound = newCompound;
     }
 
-    // Degrade tires (track-aware)
-    wear = computeTireWear(wear, tireAge, compound, trackTemp, abrasionCoeff);
+    // Degrade tires (track-aware + grip-aware)
+    wear = computeTireWear(wear, tireAge, compound, trackTemp, abrasionCoeff, gripFactor);
     fuel = Math.max(0, fuel - FUEL_PER_LAP);
 
-    const lt = predictLapTimeWithTrack(wear, compound, fuel, trackTemp, abrasionCoeff);
+    const lt = predictLapTimeWithTrack(wear, compound, fuel, trackTemp, abrasionCoeff, gripFactor);
     lapTimes.push(parseFloat(lt.toFixed(3)));
     totalTime += lt;
     tireAge++;
@@ -604,6 +632,7 @@ export function simulateWhatIf(
   state: RaceState,
   whatIfPitLap: number,
   whatIfCompound: string,
+  gripFactor: number = 1.0,
 ): WhatIfResult {
   const startLap = state.currentLap + 1;
   if (startLap > state.totalLaps) {
@@ -618,7 +647,7 @@ export function simulateWhatIf(
     state.tireWear, state.tireAge, state.currentTire,
     state.fuelRemaining,
     0, state.currentTire,
-    state.trackTemp, abrasion,
+    state.trackTemp, abrasion, gripFactor,
   );
 
   // What-if: pit at given lap on given compound
@@ -627,7 +656,7 @@ export function simulateWhatIf(
     state.tireWear, state.tireAge, state.currentTire,
     state.fuelRemaining,
     whatIfPitLap, whatIfCompound,
-    state.trackTemp, abrasion,
+    state.trackTemp, abrasion, gripFactor,
   );
 
   const laps: WhatIfLapPoint[] = [];
@@ -653,15 +682,25 @@ export function simulateWhatIf(
 /**
  * Run the strategy engine: compare "pit now" vs "pit in N laps" for all compounds.
  * Returns sorted results with the best strategy first.
+ * Now accepts optional gripFactor and StrategyAdjustment for weather and learning feedback.
  */
-export function simulatePitStrategies(state: RaceState): StrategyResult[] {
+export function simulatePitStrategies(
+  state: RaceState,
+  gripFactor: number = 1.0,
+  adjustment?: StrategyAdjustment,
+): StrategyResult[] {
   const results: StrategyResult[] = [];
   const remainingLaps = state.totalLaps - state.currentLap;
 
   if (remainingLaps <= 2) return []; // Too few laps to matter
 
   const startLap = state.currentLap + 1;
-  const compounds: string[] = ['soft', 'medium', 'hard'];
+  // In wet conditions, include wet compounds in the sweep
+  const compounds: string[] = gripFactor < 0.75
+    ? ['inter', 'wet']
+    : gripFactor < 0.9
+      ? ['soft', 'medium', 'hard', 'inter']
+      : ['soft', 'medium', 'hard'];
   const abrasion = getTrackAbrasion(state.trackName);
 
   // Determine the latest lap we'd consider pitting (don't pit in the last 3 laps)
@@ -673,7 +712,7 @@ export function simulatePitStrategies(state: RaceState): StrategyResult[] {
     state.tireWear, state.tireAge, state.currentTire,
     state.fuelRemaining,
     0, state.currentTire,
-    state.trackTemp, abrasion,
+    state.trackTemp, abrasion, gripFactor,
   );
   results.push({
     id: 'strat-no-pit',
@@ -699,8 +738,23 @@ export function simulatePitStrategies(state: RaceState): StrategyResult[] {
         state.tireWear, state.tireAge, state.currentTire,
         state.fuelRemaining,
         pitLap, newCompound,
-        state.trackTemp, abrasion,
+        state.trackTemp, abrasion, gripFactor,
       );
+
+      let adjustedTime = result.totalTime;
+
+      // ── Fix 3: Learning feedback — bias toward learned preferences ──
+      if (adjustment && adjustment.experienceLevel !== 'none') {
+        // Prefer the compound that historically worked best on this track
+        if (adjustment.preferredCompound && newCompound === adjustment.preferredCompound) {
+          adjustedTime -= 0.8; // learned preference: ~0.8s bias
+        }
+        // Prefer pit windows close to the historically optimal window
+        if (adjustment.suggestedPitLap) {
+          const pitDelta = Math.abs(pitLap - adjustment.suggestedPitLap);
+          if (pitDelta <= 2) adjustedTime -= 0.5; // within 2 laps of learned optimal
+        }
+      }
 
       const offset = pitLap - state.currentLap;
       const label = offset <= 1
@@ -713,7 +767,7 @@ export function simulatePitStrategies(state: RaceState): StrategyResult[] {
         pitLap,
         tiresBefore: state.currentTire,
         tiresAfter: newCompound,
-        totalTime: result.totalTime,
+        totalTime: adjustedTime,
         delta: 0,
         isBest: false,
         lapTimes: result.lapTimes,
@@ -739,4 +793,171 @@ export const TIRE_COLORS: Record<string, string> = {
   inter: '#00ff88',
   wet: '#00d4ff',
 };
+
+// ─── Competitor Modeling System ───────────────────────────────────────────────
+// Simulates 19 AI competitors using the same physics engine for realistic gaps.
+
+const COMPETITOR_NAMES = [
+  'HAM', 'VER', 'LEC', 'NOR', 'PIA', 'SAI', 'RUS', 'ALO', 'STR', 'GAS',
+  'OCO', 'TSU', 'RIC', 'HUL', 'MAG', 'ALB', 'SAR', 'BOT', 'ZHO',
+];
+
+export interface Competitor {
+  name: string;
+  position: number;
+  startPosition: number;
+  compound: string;
+  tireAge: number;
+  tireWear: number;
+  fuelRemaining: number;
+  cumulativeTime: number;  // total race time so far
+  lastLapTime: number;
+  pitStops: number;
+  pitSchedule: number[];   // pre-planned pit laps
+  pitCompounds: string[];  // compounds to use after each pit
+  skillOffset: number;     // driver skill variance in seconds (lower = faster)
+}
+
+/**
+ * Initialize 19 AI competitors with realistic varied strategies.
+ * Each gets a pre-planned pit schedule and skill variance.
+ */
+export function initializeCompetitors(totalLaps: number): Competitor[] {
+  const competitors: Competitor[] = [];
+
+  for (let i = 0; i < 19; i++) {
+    // Vary strategies: some start on softs (early pit), some on mediums (standard), some on hards (late pit)
+    const strategyType = i % 3;
+    let compound: string;
+    let pitSchedule: number[];
+    let pitCompounds: string[];
+
+    if (strategyType === 0) {
+      // Aggressive: start soft, pit early for medium
+      compound = 'soft';
+      const pitLap = 12 + Math.floor(Math.random() * 6); // lap 12-17
+      pitSchedule = [pitLap];
+      pitCompounds = ['medium'];
+    } else if (strategyType === 1) {
+      // Standard: start medium, pit mid-race for hard
+      compound = 'medium';
+      const pitLap = 20 + Math.floor(Math.random() * 8); // lap 20-27
+      pitSchedule = [pitLap];
+      pitCompounds = ['hard'];
+    } else {
+      // Two-stop: soft → medium → soft
+      compound = 'soft';
+      const pit1 = 10 + Math.floor(Math.random() * 4); // lap 10-13
+      const pit2 = 30 + Math.floor(Math.random() * 5); // lap 30-34
+      pitSchedule = [pit1, pit2];
+      pitCompounds = ['medium', 'soft'];
+    }
+
+    // Skill offset: top teams are faster, backmarkers slower
+    // Positions 1-6: fast (0-0.5s), 7-12: mid (0.5-1.2s), 13-19: slow (1.0-2.0s)
+    const skillOffset = i < 6
+      ? Math.random() * 0.5
+      : i < 12
+        ? 0.5 + Math.random() * 0.7
+        : 1.0 + Math.random() * 1.0;
+
+    competitors.push({
+      name: COMPETITOR_NAMES[i] || `P${i + 1}`,
+      position: i + 1, // initial grid positions (1-indexed, skipping player's position)
+      startPosition: i + 1,
+      compound,
+      tireAge: 0,
+      tireWear: 100,
+      fuelRemaining: FUEL_LOAD_FULL,
+      cumulativeTime: 0,
+      lastLapTime: 0,
+      pitStops: 0,
+      pitSchedule,
+      pitCompounds,
+      skillOffset,
+    });
+  }
+
+  return competitors;
+}
+
+/**
+ * Simulate one lap for a competitor using the same physics engine.
+ * Returns updated competitor state.
+ */
+export function simulateCompetitorLap(
+  comp: Competitor,
+  currentLap: number,
+  trackTemp: number,
+  abrasionCoeff: number,
+  gripFactor: number = 1.0,
+): Competitor {
+  const updated = { ...comp };
+
+  // Check if competitor should pit this lap
+  const pitIndex = updated.pitSchedule.indexOf(currentLap);
+  if (pitIndex !== -1 && pitIndex < updated.pitCompounds.length) {
+    updated.cumulativeTime += PIT_STOP_TIME_LOSS;
+    updated.compound = updated.pitCompounds[pitIndex];
+    updated.tireWear = 100;
+    updated.tireAge = 0;
+    updated.pitStops++;
+  }
+
+  // Degrade tires
+  updated.tireWear = computeTireWear(
+    updated.tireWear, updated.tireAge, updated.compound,
+    trackTemp, abrasionCoeff, gripFactor,
+  );
+  updated.fuelRemaining = Math.max(0, updated.fuelRemaining - FUEL_PER_LAP);
+
+  // Compute lap time (deterministic + small driver noise + skill offset)
+  const model = TIRE_MODELS[updated.compound] ?? TIRE_MODELS.medium;
+  const wearLost = 100 - updated.tireWear;
+  const tirePenalty = wearLost * model.lapTimePenalty;
+  const fuelEffect = -((FUEL_LOAD_FULL - updated.fuelRemaining) / FUEL_LOAD_FULL) * 1.4;
+  const gripPenalty = (1.0 - gripFactor) * 8.0;
+  const wrongTirePenalty = gripFactor < 0.85 && updated.compound !== 'inter' && updated.compound !== 'wet'
+    ? (1.0 - gripFactor) * 12.0
+    : 0;
+  const driverNoise = (Math.random() - 0.5) * 0.4; // competitors have slightly less noise
+  const lapTime = BASE_LAP_TIME + model.baseOffset + tirePenalty + fuelEffect
+    + gripPenalty + wrongTirePenalty + updated.skillOffset + driverNoise;
+
+  updated.lastLapTime = parseFloat(lapTime.toFixed(3));
+  updated.cumulativeTime += lapTime;
+  updated.tireAge++;
+
+  return updated;
+}
+
+/**
+ * Given the player's cumulative time and competitors' cumulative times,
+ * compute the player's position, gapAhead, and gapBehind.
+ */
+export function computePositionFromCompetitors(
+  playerCumulativeTime: number,
+  competitors: Competitor[],
+): { position: number; gapAhead: number; gapBehind: number } {
+  // Combine player with competitors, sort by cumulative time
+  const allTimes = competitors.map(c => ({ name: c.name, time: c.cumulativeTime, isPlayer: false }));
+  allTimes.push({ name: 'PLAYER', time: playerCumulativeTime, isPlayer: true });
+  allTimes.sort((a, b) => a.time - b.time);
+
+  const playerIdx = allTimes.findIndex(t => t.isPlayer);
+  const position = playerIdx + 1; // 1-indexed
+
+  const gapAhead = playerIdx > 0
+    ? parseFloat((playerCumulativeTime - allTimes[playerIdx - 1].time).toFixed(1))
+    : 0;
+  const gapBehind = playerIdx < allTimes.length - 1
+    ? parseFloat((allTimes[playerIdx + 1].time - playerCumulativeTime).toFixed(1))
+    : 99.9;
+
+  return {
+    position: Math.max(1, Math.min(20, position)),
+    gapAhead: Math.max(0.1, gapAhead),
+    gapBehind: Math.max(0.1, gapBehind),
+  };
+}
 
