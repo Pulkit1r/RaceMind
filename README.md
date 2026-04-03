@@ -50,18 +50,19 @@ This is **NOT a game**. It's a **digital twin** of an F1 pit wall strategy syste
 | 🧮 Physics Engine | Tire degradation, fuel burn, lap time prediction from physics models |
 | 🏁 15 Real Circuits | Monaco, Silverstone, Spa, Bahrain, Suzuka... each with unique abrasion physics |
 | 🌡️ Track Temperature | Thermal wear multiplier affects tire degradation dynamically |
-| 🌧️ Live Weather API | OpenWeatherMap integration with climate-based fallback simulation |
+| 🌧️ Weather-Integrated Physics | Live weather (OpenWeatherMap + fallback) directly affects grip, lap times, and tire wear |
+| 🏎️ 19 AI Competitors | Physics-simulated rivals with varied strategies — real gaps, real position battles |
 
 ### AI-Powered Strategy
 | Feature | Description |
 |---|---|
-| 🧠 Brute-Force Optimizer | Sweeps every pit window × every compound → picks the fastest scenario |
-| 📊 Confidence Scoring | Multi-factor weighted classifier: 0-98% confidence on each recommendation |
+| 🧠 Strategy Optimizer | Sweeps every pit window × every compound → picks the fastest scenario |
+| 📊 Confidence Scoring | Multi-factor weighted heuristic: 0-98% confidence on each recommendation |
 | 🎯 Strategy Goal Selection | User picks: Maximize Position / Minimize Time / Low Risk — AI adapts all decisions |
 | 🤖 Auto Strategy Mode | Toggle auto mode: AI executes pit stops when confidence > 85% |
 | 🧪 "If You Ignore AI" | Shows consequences of not following recommendations |
 | 🧠 "Why This Decision?" | Click any recommendation to see full physics reasoning |
-| 💾 Race Memory System | Stores past results in localStorage, learns optimal strategies per track |
+| 💾 Adaptive Race Memory | Stores past results, learns optimal strategies per track, feeds back into the strategy engine |
 | ⚔️ Strategy Comparison | What-If modal: compare current vs alternative strategy visually |
 
 ### User Experience
@@ -197,31 +198,34 @@ This is **NOT a game**. It's a **digital twin** of an F1 pit wall strategy syste
 
 ---
 
-## 🤖 AI / ML Techniques Used
+## 🤖 Engineering Approach: Physics-First AI
 
-> **Important**: RaceMind uses **Physics-Based AI**, not deep learning neural networks. This is the **same approach real F1 teams use**. Here's why and how:
+> **Design philosophy**: RaceMind uses **interpretable, physics-first methods** — the same engineering philosophy used by real F1 pit wall teams. We deliberately chose explainable models over black-box neural networks.
 
-### 1. Brute-Force Strategy Optimization (Search AI)
+### 1. Deterministic Strategy Optimization (Parameter Sweep)
 ```
-For EACH tire compound (Soft, Medium, Hard):
+For EACH tire compound (Soft, Medium, Hard, Inter, Wet):
   For EACH possible pit lap (now, +2, +4, +6... +14):
     Simulate entire remaining race with physics engine
+    Apply learning bias from past races on this track
     Record total race time
 Sort all scenarios → Best strategy = lowest total time
 ```
-- **ML Equivalent**: Grid Search / Hyperparameter Optimization
+- **Technique**: Exhaustive grid search over strategy space
 - **Function**: `simulatePitStrategies()` in `data.ts`
-- **Why this matters**: Evaluates 20-30 complete race simulations per decision
+- **Scope**: Evaluates 20-30 complete race simulations per decision tick
+- **Weather-aware**: In wet conditions, automatically sweeps intermediate and wet compounds
 
-### 2. Parametric Physics Model (Model-Based AI)
+### 2. Parametric Physics Model (Calibrated Regression)
 ```
-wearThisLap = (baseRate + accelFactor × tireAge) × trackAbrasion × thermalMultiplier
+wearThisLap = (baseRate + accelFactor × tireAge) × trackAbrasion × thermalMultiplier × wetWearModifier
+lapTime = baseTime + compoundOffset + tirePenalty + fuelEffect + gripPenalty + wrongTirePenalty
 ```
-- **ML Equivalent**: Parametric Regression with fitted coefficients
-- **Function**: `computeTireWear()` in `data.ts`
-- **Why this matters**: Constants calibrated from real Pirelli compound data
+- **Technique**: Parametric regression with coefficients calibrated from real Pirelli data
+- **Function**: `computeTireWear()`, `computeLapTime()` in `data.ts`
+- **Why this matters**: The quadratic cliff function mirrors real F1 tire behavior; grip factor from weather directly affects lap times (up to +4.4s in heavy rain)
 
-### 3. Confidence Scoring (Classification Heuristic)
+### 3. Multi-Factor Confidence Heuristic
 ```javascript
 const wearFactor = Math.min(30, (100 - tireWear) * 0.4);
 const timeFactor = Math.min(40, timeSaved * 3);
@@ -230,46 +234,57 @@ let confidence = Math.min(98, Math.round(30 + wearFactor + timeFactor + goalBias
 // Boosted by track memory experience (up to +15%)
 confidence = Math.min(98, confidence + trackMemoryBoost);
 ```
-- **ML Equivalent**: Logistic Regression / Scoring Classifier
+- **Technique**: Weighted scoring heuristic with experience-based calibration
 - **Function**: `generateRecommendations()` in `data.ts`
 
-### 4. Expert Rule System (Anomaly Detection)
+### 4. Threshold-Based Alert System
 ```
 IF tireWear < 20%   → CRITICAL: "Box this lap"
 IF rainChance > 60% → WARNING:  "Consider intermediates"
 IF fuel < 10kg      → WARNING:  "Fuel save mode"
 ```
-- **ML Equivalent**: Rule-Based Expert System
+- **Technique**: Rule-based expert system with priority escalation
 - **Function**: Threshold checks in `Dashboard.simulateLap()`
 
-### 5. Climate Simulation (Monte Carlo)
+### 5. Climate Fallback Model
 ```
-Temperature derived from latitude/longitude using fitted seasonal model
-Rain probability from climate data with stochastic drift
+Temperature derived from latitude/longitude using fitted seasonal curves
+Rain probability from climate data with stochastic drift per lap
 ```
-- **ML Equivalent**: Monte Carlo Simulation
+- **Technique**: Statistical climate model with random walk perturbation
 - **Function**: `generateSimulatedWeather()` in `weatherApi.ts`
 
-### 6. Experience-Based Learning (Reinforcement)
+### 6. Experience-Based Strategy Refinement
 ```
 After each race → save result to localStorage
 Aggregate per-track: optimal pit window, best compound, podium rate
-Next race → confidence boosted by experience level (up to +15%)
+Next race → learned preferences bias the strategy engine's compound and timing choices
 ```
-- **ML Equivalent**: Tabular Reinforcement Learning / Experience Replay
-- **Function**: `getStrategyAdjustment()` in `raceMemory.ts`
-- **Why this matters**: AI literally gets smarter the more you race a track
+- **Technique**: Historical aggregation with feedback into the optimization loop
+- **Function**: `getStrategyAdjustment()` in `raceMemory.ts`, consumed by `simulatePitStrategies()`
+- **How it works**: Learned preferred compounds get a 0.8s bias; pit windows within 2 laps of the historical optimum get a 0.5s bias. This changes *what the strategy engine recommends*, not just a cosmetic score.
 
-### 7. Goal-Conditioned Decision Making (Multi-Objective Optimization)
+### 7. Goal-Conditioned Decision Engine
 ```
 Goal Modifiers:
   maximize-position: { pitBias: +10, aggressiveness: 1.3 }
   minimize-time:     { pitBias:   0, aggressiveness: 1.0 }
   low-risk:          { pitBias:  -8, aggressiveness: 0.6 }
 ```
-- **ML Equivalent**: Multi-Objective Optimization / Reward Shaping
+- **Technique**: Multi-objective parameterization with user-selectable reward shaping
 - **Function**: `goalMod` in `generateRecommendations()`
 - **Why this matters**: Same data produces different decisions based on user's objective
+
+### 8. Multi-Car Physics Simulation (Competitor Modeling)
+```
+19 AI competitors × same physics engine per lap
+Each competitor has: skill offset, pre-planned pit schedule, tire compound, cumulative time
+Player position = sorted rank by cumulative race time
+Gaps computed from actual time deltas, not random values
+```
+- **Technique**: Agent-based simulation with shared physics
+- **Function**: `simulateCompetitorLap()`, `computePositionFromCompetitors()` in `data.ts`
+- **Why this matters**: Position, gap ahead, gap behind, and DRS availability are all computed from real physics — not approximated
 
 ### Why NOT Neural Networks?
 
@@ -554,32 +569,35 @@ npm run preview
 
 ## ❓ FAQ for Judges
 
-### "Is this using ML?"
-> Yes — **7 techniques**: brute-force optimization (search AI), parametric regression (physics model), weighted scoring classifier (confidence), expert rule system (alerts), Monte Carlo simulation (weather), experience-based learning (memory), and multi-objective optimization (strategy goals). These are all established AI/ML techniques.
+### "Is this using AI/ML?"
+> Yes — RaceMind implements **8 distinct computational techniques**: deterministic strategy optimization (exhaustive grid search), parametric physics modeling (calibrated regression), multi-factor confidence heuristics, threshold-based expert system, statistical climate modeling, experience-based strategy refinement (historical aggregation with feedback loop), goal-conditioned decision parameterization, and multi-car agent-based simulation. These are the same categories of techniques used by real F1 pit wall software.
 
 ### "Why not use a neural network?"
-> Real F1 teams don't use neural networks for pit strategy. Physics-based AI is the industry standard because it's **explainable**, **deterministic**, and works without massive training data. Our AI can tell you *exactly why* it made every decision — a neural network can't.
+> Real F1 teams don't use neural networks for pit strategy. Physics-based approaches are the industry standard because they're **explainable**, **deterministic**, and work without massive training data. Our system can tell you *exactly why* it made every decision — a neural network can't.
 
-### "How does the AI learn?"
-> After every race, results are saved to localStorage: position, strategy used, tire performance, weather, etc. The system aggregates this per-track to learn the optimal pit window, best compound sequence, and podium rate. This earns a confidence boost of up to +15% — the AI literally gets smarter with experience.
+### "How does the AI learn from experience?"
+> After every race, results are saved: position, strategy used, tire performance, weather conditions. The system aggregates this per-track to learn the optimal pit window and best compound sequence. **Critically, this learning feeds back into the strategy engine** — learned compound preferences get a 0.8s bias in the optimization, and pit windows close to the historical optimum get a 0.5s bias. The AI doesn't just remember — it changes what it recommends.
 
 ### "How does the Strategy Goal work?"
-> Each goal applies mathematical modifiers to the AI's decision engine. "Maximize Position" adds +10 to pit confidence and +12 to overtake urgency. "Low Risk" subtracts confidence and boosts STAY OUT preference by +10. **The same race data produces completely different recommendations** based on the goal — that's Multi-Objective Optimization.
+> Each goal applies mathematical modifiers to the decision engine. "Maximize Position" adds +10 to pit confidence and +12 to overtake urgency. "Low Risk" subtracts confidence and boosts STAY OUT preference by +10. **The same race data produces completely different recommendations** based on the goal.
 
 ### "What is Auto Strategy Mode?"
 > It's an autonomous AI execution system. When confidence exceeds 85% on a BOX recommendation, the AI automatically executes the pit stop — no human input needed. An 8-lap cooldown prevents rapid re-pitting. The user can ALWAYS override by pressing P.
 
-### "Where does the data come from?"
-> Tire compound parameters are calibrated from published Pirelli degradation curves. Track abrasion coefficients are derived from historical compound selection data. Weather comes from OpenWeatherMap API or our climate simulation model.
+### "How do position battles work?"
+> RaceMind simulates **19 AI competitors** using the same physics engine as the player. Each competitor has a pre-planned pit strategy, individual skill offset, and runs the full tire/fuel model every lap. Position, gap ahead, gap behind, and DRS availability are computed from actual cumulative race times — not estimated.
 
-### "Is this real-time?"
-> Yes. The simulation runs at 1.8s per lap tick. The strategy engine sweeps 20-30 scenarios per tick. The UI updates lap times, tire wear, position, and AI recommendations in real-time.
+### "Does weather affect the simulation?"
+> Yes, directly. Rain probability maps to a grip factor (1.0 = dry, 0.45 = heavy rain). This grip factor flows into `computeLapTime()` adding up to +4.4s penalty, into `computeTireWear()` accelerating dry-compound degradation in wet, and into the strategy engine which automatically switches to evaluating intermediate and wet compounds when grip drops below 0.9.
+
+### "Where does the data come from?"
+> Tire compound parameters are calibrated from published Pirelli degradation curves. Track abrasion coefficients are derived from historical compound selection data. Weather comes from OpenWeatherMap API or our statistical climate model.
 
 ### "Why not use Python?"
-> By implementing all AI and physics in TypeScript, the system runs entirely in the browser with **zero latency**, **zero server costs**, and **instant deployment**. The mathematical algorithms (regression, grid search, optimization) work identically in TypeScript — they're math, not Python-specific libraries.
+> By implementing all physics and optimization in TypeScript, the system runs entirely in the browser with **zero latency**, **zero server costs**, and **instant deployment**. The mathematical algorithms work identically in TypeScript — they're math, not library-dependent.
 
 ### "What makes this different from a game?"
-> Games optimize for fun. We optimize for accuracy. Our tire degradation model uses quadratic cliff functions matching real F1 wear curves. Our strategy engine solves the same optimization problem that real pit wall engineers solve. Our memory system implements the same experience-based refinement that teams use across a race weekend.
+> Games optimize for fun. We optimize for accuracy. Our tire degradation model uses quadratic cliff functions matching real F1 wear curves. Our strategy engine solves the same optimization problem that real pit wall engineers solve. Our 19 competitors run the same physics — positions are earned, not scripted.
 
 ---
 
@@ -602,21 +620,23 @@ npm run preview
 
 ## 📊 Project Summary
 
-RaceMind is a **professional-grade F1 race strategy simulator** with the following key innovations:
+RaceMind is a **high-fidelity F1 race strategy simulator** with the following engineering innovations:
 
-1. **🧮 Physics-Based AI Engine** — 740+ lines of physics formulas that model tire degradation, fuel consumption, and lap time prediction with the same accuracy as professional F1 strategy software.
+1. **🧮 Physics-First Strategy Engine** — 900+ lines of physics formulas modeling tire degradation (quadratic cliff), fuel consumption, grip-dependent lap times, and weather impact. The same deterministic approach used by real F1 pit wall systems.
 
-2. **🧠 7 AI/ML Techniques** — Brute-force optimization, parametric regression, classification heuristics, expert rule systems, Monte Carlo simulation, experience-based learning, and multi-objective optimization — all implemented in TypeScript.
+2. **🏎️ Multi-Car Simulation** — 19 AI competitors run the same physics engine every lap. Position, gaps, and DRS are computed from actual cumulative race times — not approximated. Competitors have varied strategies (1-stop, 2-stop) and individual skill offsets.
 
-3. **💾 Adaptive Memory System** — The AI stores past race results and learns per-track: optimal pit windows, best compounds, and confidence calibration. Experience levels progress from NONE → NOVICE → EXPERIENCED → EXPERT.
+3. **🌧️ Weather-Integrated Physics** — Rain probability maps to a grip factor that directly affects lap times (+4.4s in heavy rain), tire wear (dry on wet = +25% degradation), and strategy (engine auto-sweeps wet compounds). Weather doesn't just change text — it changes the math.
 
-4. **🎯 Goal-Conditioned Strategy** — Three strategy modes (Position / Time / Risk) that fundamentally change AI behavior using multi-objective optimization with mathematical goal modifiers.
+4. **💾 Adaptive Strategy Refinement** — Past race results feed back into the optimization engine. Learned compound preferences and pit windows bias future strategy recommendations. The AI doesn't just remember — it changes what it recommends.
 
-5. **🤖 Autonomous Decision Making** — Auto Strategy Mode lets the AI execute pit stops when confidence exceeds 85%, with cooldown protection and full user override capability.
+5. **🎯 Goal-Conditioned Decision Engine** — Three strategy modes (Position / Time / Risk) apply mathematical modifiers that fundamentally change AI behavior using parameterized reward shaping.
 
-6. **🎙️ Explainable AI** — Every recommendation includes: confidence score, physics reasoning ("Why this decision?"), and consequence modeling ("If you ignore this"). The AI speaks decisions aloud.
+6. **🤖 Autonomous Execution** — Auto Strategy Mode lets the AI execute pit stops when confidence exceeds 85%, with cooldown protection and full user override.
 
-7. **📡 Premium Real-Time UI** — Glassmorphism design with live telemetry flickering, 3 responsive charts, voice race engineer, keyboard shortcuts, and micro-animations.
+7. **🎙️ Explainable Recommendations** — Every recommendation includes: confidence score, physics reasoning ("Why this decision?"), and consequence modeling ("If you ignore this"). The AI speaks decisions aloud via Web Speech API.
+
+8. **📡 Premium Real-Time UI** — Glassmorphism design with live telemetry, 3 responsive charts, voice race engineer, keyboard shortcuts, and micro-animations.
 
 ---
 
@@ -626,4 +646,4 @@ Built for the **RaceMind** hackathon presentation.
 
 ---
 
-*"In Formula 1, the difference between winning and losing is a single pit stop decision. RaceMind makes that decision with data, physics, and AI — and it gets smarter every race."*
+*"In Formula 1, the difference between winning and losing is a single pit stop decision. RaceMind makes that decision with data, physics, and engineering — and it gets smarter every race."*

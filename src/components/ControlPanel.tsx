@@ -7,7 +7,7 @@ import {
   Play, Square, Octagon, Shuffle, Settings,
   ChevronDown, AlertTriangle, Droplets, CircleDot, FlaskConical,
   Volume2, VolumeX, MapPin, Key, Wifi, WifiOff, Check, X, Loader,
-  Brain, Zap, User as UserIcon, Target, Timer, Shield
+  Brain, Zap, User as UserIcon, Target, Timer, Shield, RotateCcw
 } from 'lucide-react';
 
 interface ControlPanelProps {
@@ -21,6 +21,7 @@ interface ControlPanelProps {
   onAlternateStrategy: () => void;
   onOpenWhatIf: () => void;
   onToggleAudio: () => void;
+  onReset: () => void;
   audioEnabled: boolean;
   isRacing: boolean;
   autoStrategy: boolean;
@@ -120,7 +121,7 @@ function NeonSlider({ value, min, max, step, label, displayValue, onChange, colo
 export default function ControlPanel({
   state, onStartRace, onStopRace, onPitNow, onChangeTire,
   onTireWearChange, onWeatherChange, onAlternateStrategy, onOpenWhatIf,
-  onToggleAudio, audioEnabled, isRacing,
+  onToggleAudio, onReset, audioEnabled, isRacing,
   autoStrategy, onToggleAutoStrategy,
   strategyGoal, onStrategyGoalChange,
   onTrackChange, onApiKeySubmit, apiKey, liveWeather, weatherLoading,
@@ -206,13 +207,23 @@ export default function ControlPanel({
       <div className="space-y-2">
         {/* Start / Stop Simulation */}
         {!isRacing ? (
-          <ActionButton
-            onClick={onStartRace}
-            icon={<Play className="w-4 h-4" />}
-            label="Start Simulation"
-            variant="green"
-            pulse
-          />
+          <>
+            <ActionButton
+              onClick={onStartRace}
+              icon={<Play className="w-4 h-4" />}
+              label={(state.currentLap > 0 || state.raceStatus !== 'pre-race') ? "Resume Simulation" : "Start Simulation"}
+              variant="green"
+              pulse
+            />
+            {(state.currentLap > 0 || state.raceStatus !== 'pre-race') && (
+              <ActionButton
+                onClick={onReset}
+                icon={<RotateCcw className="w-4 h-4" />}
+                label="Reset Simulation"
+                variant="neutral"
+              />
+            )}
+          </>
         ) : (
           <ActionButton
             onClick={onStopRace}
