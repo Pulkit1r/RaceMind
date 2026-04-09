@@ -1,0 +1,20 @@
+{
+  "soft": {
+    "baseOffset": -0.3108,
+    "wearPerLap": 3,
+    "wearAccel": 0.0317,
+    "lapTimePenalty": 0.0268
+  },
+  "medium": {
+    "baseOffset": 0.0813,
+    "wearPerLap": 1.8,
+    "wearAccel": 0.15,
+    "lapTimePenalty": 0.0086
+  },
+  "hard": {
+    "baseOffset": 0.3938,
+    "wearPerLap": 1,
+    "wearAccel": 0.015,
+    "lapTimePenalty": 0.0153
+  }
+}

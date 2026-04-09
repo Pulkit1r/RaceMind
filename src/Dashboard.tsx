@@ -41,8 +41,11 @@ import {
   getStrategyAdjustment,
   getRaceCount,
   loadRaceHistory,
+  seedFromErgast,
+  getErgastSeededCount,
   type StrategyAdjustment,
 } from './raceMemory';
+import { fetchCurrentSession, isSessionLive, type LiveSession } from './openF1Api';
 
 export default function Dashboard() {
   const [raceState, setRaceState] = useState<RaceState>({ ...initialRaceState });
@@ -74,6 +77,9 @@ export default function Dashboard() {
   );
   const competitorsRef = useRef<Competitor[]>([]);
   const playerCumulativeTimeRef = useRef(0);
+  const [ergastSeededCount, setErgastSeededCount] = useState(0);
+  const [liveMode, setLiveMode] = useState(false);
+  const [liveSession, setLiveSession] = useState<LiveSession | null>(null);
 
   // Compute grip factor from current weather conditions
   function getGripFactor(state: RaceState): number {
@@ -120,9 +126,12 @@ export default function Dashboard() {
     }
   }, []);
 
-  // Fetch weather on mount and when track changes
+  // Fetch weather and seed Ergast data on mount and when track changes
   useEffect(() => {
     fetchWeather(raceState.trackName);
+    seedFromErgast(raceState.trackName).then(count => {
+      setErgastSeededCount(count);
+    });
   }, [raceState.trackName, fetchWeather]);
 
   // Refresh weather every 60s during a race
@@ -142,6 +151,13 @@ export default function Dashboard() {
   // ─── Track change handler ─────────────────────────────────────────────────
   const handleTrackChange = useCallback((trackName: string) => {
     setRaceState(prev => ({ ...prev, trackName }));
+    // Seed Ergast historical data for this track
+    seedFromErgast(trackName).then(count => {
+      setErgastSeededCount(count);
+      if (count > 0) {
+        setTrackAdjustment(getStrategyAdjustment(trackName));
+      }
+    });
   }, []);
 
   // ─── API Key handler ──────────────────────────────────────────────────────
@@ -668,7 +684,7 @@ export default function Dashboard() {
 
       <div className="relative z-10 flex flex-col h-full gap-3">
         {/* Top Bar */}
-        <TopBar state={raceState} liveWeather={liveWeather} weatherLoading={weatherLoading} />
+        <TopBar state={raceState} liveWeather={liveWeather} weatherLoading={weatherLoading} liveMode={liveMode} />
 
         {/* Main Content: Left + Center + Right */}
         <div className="flex-1 flex gap-3 min-h-0">
@@ -707,7 +723,7 @@ export default function Dashboard() {
 
           {/* Right Panel - AI */}
           <div className="w-[340px] flex-shrink-0">
-            <AIPanel recommendations={recommendations} strategies={strategies} state={raceState} trackAdjustment={trackAdjustment} />
+            <AIPanel recommendations={recommendations} strategies={strategies} state={raceState} trackAdjustment={trackAdjustment} ergastSeededCount={ergastSeededCount} />
           </div>
         </div>
 

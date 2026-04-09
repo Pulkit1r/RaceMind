@@ -1,0 +1,3872 @@
+[
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 1,
+    "lapTime": 75.003,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 2,
+    "lapTime": 75.369,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 3,
+    "lapTime": 75.527,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 4,
+    "lapTime": 75.64,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 5,
+    "lapTime": 75.415,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 6,
+    "lapTime": 75.173,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 7,
+    "lapTime": 75.135,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 8,
+    "lapTime": 75.397,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 9,
+    "lapTime": 75.676,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 10,
+    "lapTime": 75.902,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 11,
+    "lapTime": 75.34,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 12,
+    "lapTime": 75.729,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 13,
+    "lapTime": 75.683,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 14,
+    "lapTime": 76.038,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 15,
+    "lapTime": 75.638,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 16,
+    "lapTime": 76.416,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 17,
+    "lapTime": 75.983,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "soft",
+    "lapNumber": 18,
+    "lapTime": 75.997,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 1,
+    "lapTime": 74.802,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 2,
+    "lapTime": 75.071,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 3,
+    "lapTime": 75.313,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 4,
+    "lapTime": 75.185,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 5,
+    "lapTime": 75.558,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 6,
+    "lapTime": 75.753,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 7,
+    "lapTime": 75.182,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 8,
+    "lapTime": 75.771,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 9,
+    "lapTime": 75.571,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 10,
+    "lapTime": 75.867,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 11,
+    "lapTime": 75.737,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 12,
+    "lapTime": 76.197,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 13,
+    "lapTime": 75.606,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 14,
+    "lapTime": 76.05,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 15,
+    "lapTime": 76.263,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 16,
+    "lapTime": 76.372,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 17,
+    "lapTime": 75.791,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "soft",
+    "lapNumber": 18,
+    "lapTime": 76.154,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 1,
+    "lapTime": 75.123,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 2,
+    "lapTime": 75.203,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 3,
+    "lapTime": 74.912,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 4,
+    "lapTime": 75.459,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 5,
+    "lapTime": 75.451,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 6,
+    "lapTime": 75.189,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 7,
+    "lapTime": 75.494,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 8,
+    "lapTime": 75.27,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 9,
+    "lapTime": 75.913,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 10,
+    "lapTime": 75.652,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 11,
+    "lapTime": 75.674,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 12,
+    "lapTime": 75.737,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 13,
+    "lapTime": 75.883,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 14,
+    "lapTime": 75.664,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 15,
+    "lapTime": 75.997,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 16,
+    "lapTime": 76.357,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 17,
+    "lapTime": 75.841,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "soft",
+    "lapNumber": 18,
+    "lapTime": 76.29,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 1,
+    "lapTime": 75.424,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 2,
+    "lapTime": 74.951,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 3,
+    "lapTime": 75.058,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 4,
+    "lapTime": 75.512,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 5,
+    "lapTime": 75.374,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 6,
+    "lapTime": 75.4,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 7,
+    "lapTime": 75.285,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 8,
+    "lapTime": 75.523,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 9,
+    "lapTime": 75.835,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 10,
+    "lapTime": 75.33,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 11,
+    "lapTime": 75.791,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 12,
+    "lapTime": 75.998,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 13,
+    "lapTime": 75.662,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 14,
+    "lapTime": 75.964,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 15,
+    "lapTime": 76.045,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 16,
+    "lapTime": 76.406,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 17,
+    "lapTime": 76.011,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "soft",
+    "lapNumber": 18,
+    "lapTime": 76.328,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 1,
+    "lapTime": 75.49,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 2,
+    "lapTime": 75.036,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 3,
+    "lapTime": 75.209,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 4,
+    "lapTime": 75.012,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 5,
+    "lapTime": 75.521,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 6,
+    "lapTime": 75.792,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 7,
+    "lapTime": 75.458,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 8,
+    "lapTime": 75.197,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 9,
+    "lapTime": 75.995,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 10,
+    "lapTime": 75.944,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 11,
+    "lapTime": 75.854,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 12,
+    "lapTime": 75.86,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 13,
+    "lapTime": 75.476,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 14,
+    "lapTime": 75.988,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 15,
+    "lapTime": 75.658,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 16,
+    "lapTime": 75.89,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 17,
+    "lapTime": 76.004,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "soft",
+    "lapNumber": 18,
+    "lapTime": 76.224,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 1,
+    "lapTime": 75.804,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 2,
+    "lapTime": 75.341,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 3,
+    "lapTime": 75.47,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 4,
+    "lapTime": 75.335,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 5,
+    "lapTime": 75.795,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 6,
+    "lapTime": 75.309,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 7,
+    "lapTime": 75.281,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 8,
+    "lapTime": 75.64,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 9,
+    "lapTime": 75.321,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 10,
+    "lapTime": 75.154,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 11,
+    "lapTime": 75.267,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 12,
+    "lapTime": 75.361,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 13,
+    "lapTime": 75.913,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 14,
+    "lapTime": 75.336,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 15,
+    "lapTime": 75.946,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 16,
+    "lapTime": 75.325,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 17,
+    "lapTime": 75.273,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 18,
+    "lapTime": 75.637,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 19,
+    "lapTime": 75.941,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 20,
+    "lapTime": 75.346,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 21,
+    "lapTime": 75.351,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 22,
+    "lapTime": 76.102,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 23,
+    "lapTime": 76.024,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 24,
+    "lapTime": 75.391,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 25,
+    "lapTime": 75.725,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 26,
+    "lapTime": 75.883,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 27,
+    "lapTime": 75.991,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "medium",
+    "lapNumber": 28,
+    "lapTime": 75.84,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 1,
+    "lapTime": 75.545,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 2,
+    "lapTime": 75.514,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 3,
+    "lapTime": 75.332,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 4,
+    "lapTime": 75.804,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 5,
+    "lapTime": 75.254,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 6,
+    "lapTime": 75.758,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 7,
+    "lapTime": 75.366,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 8,
+    "lapTime": 75.209,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 9,
+    "lapTime": 75.623,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 10,
+    "lapTime": 75.547,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 11,
+    "lapTime": 75.875,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 12,
+    "lapTime": 75.675,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 13,
+    "lapTime": 75.742,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 14,
+    "lapTime": 75.531,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 15,
+    "lapTime": 75.505,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 16,
+    "lapTime": 75.294,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 17,
+    "lapTime": 75.72,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 18,
+    "lapTime": 75.325,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 19,
+    "lapTime": 75.497,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 20,
+    "lapTime": 75.626,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 21,
+    "lapTime": 76.05,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 22,
+    "lapTime": 75.765,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 23,
+    "lapTime": 75.928,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 24,
+    "lapTime": 75.892,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 25,
+    "lapTime": 75.934,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 26,
+    "lapTime": 76.114,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 27,
+    "lapTime": 76.022,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "medium",
+    "lapNumber": 28,
+    "lapTime": 75.713,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 1,
+    "lapTime": 75.715,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 2,
+    "lapTime": 75.448,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 3,
+    "lapTime": 75.184,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 4,
+    "lapTime": 75.777,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 5,
+    "lapTime": 75.549,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 6,
+    "lapTime": 75.424,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 7,
+    "lapTime": 75.143,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 8,
+    "lapTime": 75.535,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 9,
+    "lapTime": 75.544,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 10,
+    "lapTime": 75.411,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 11,
+    "lapTime": 75.615,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 12,
+    "lapTime": 75.405,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 13,
+    "lapTime": 75.221,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 14,
+    "lapTime": 75.745,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 15,
+    "lapTime": 75.223,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 16,
+    "lapTime": 75.867,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 17,
+    "lapTime": 75.528,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 18,
+    "lapTime": 76.011,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 19,
+    "lapTime": 75.537,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 20,
+    "lapTime": 75.631,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 21,
+    "lapTime": 75.705,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 22,
+    "lapTime": 75.781,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 23,
+    "lapTime": 75.783,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 24,
+    "lapTime": 75.782,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 25,
+    "lapTime": 75.638,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 26,
+    "lapTime": 75.905,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 27,
+    "lapTime": 76.169,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "medium",
+    "lapNumber": 28,
+    "lapTime": 75.99,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 1,
+    "lapTime": 75.267,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 2,
+    "lapTime": 75.822,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 3,
+    "lapTime": 75.532,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 4,
+    "lapTime": 75.783,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 5,
+    "lapTime": 75.105,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 6,
+    "lapTime": 75.694,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 7,
+    "lapTime": 75.168,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 8,
+    "lapTime": 75.569,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 9,
+    "lapTime": 75.742,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 10,
+    "lapTime": 75.879,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 11,
+    "lapTime": 75.693,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 12,
+    "lapTime": 75.687,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 13,
+    "lapTime": 75.278,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 14,
+    "lapTime": 75.981,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 15,
+    "lapTime": 75.585,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 16,
+    "lapTime": 75.374,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 17,
+    "lapTime": 75.671,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 18,
+    "lapTime": 75.953,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 19,
+    "lapTime": 75.992,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 20,
+    "lapTime": 75.864,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 21,
+    "lapTime": 75.595,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 22,
+    "lapTime": 75.803,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 23,
+    "lapTime": 75.885,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 24,
+    "lapTime": 75.732,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 25,
+    "lapTime": 75.95,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 26,
+    "lapTime": 75.422,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 27,
+    "lapTime": 75.791,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "medium",
+    "lapNumber": 28,
+    "lapTime": 76.044,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 1,
+    "lapTime": 75.174,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 2,
+    "lapTime": 75.763,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 3,
+    "lapTime": 75.277,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 4,
+    "lapTime": 75.799,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 5,
+    "lapTime": 75.702,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 6,
+    "lapTime": 75.225,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 7,
+    "lapTime": 75.361,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 8,
+    "lapTime": 75.226,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 9,
+    "lapTime": 75.742,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 10,
+    "lapTime": 75.725,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 11,
+    "lapTime": 75.624,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 12,
+    "lapTime": 75.211,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 13,
+    "lapTime": 75.922,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 14,
+    "lapTime": 75.203,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 15,
+    "lapTime": 75.639,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 16,
+    "lapTime": 75.63,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 17,
+    "lapTime": 76.013,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 18,
+    "lapTime": 75.987,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 19,
+    "lapTime": 75.751,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 20,
+    "lapTime": 75.946,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 21,
+    "lapTime": 75.666,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 22,
+    "lapTime": 75.519,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 23,
+    "lapTime": 75.891,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 24,
+    "lapTime": 75.781,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 25,
+    "lapTime": 76.094,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 26,
+    "lapTime": 75.991,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 27,
+    "lapTime": 75.625,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "medium",
+    "lapNumber": 28,
+    "lapTime": 76.113,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 1,
+    "lapTime": 75.782,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 2,
+    "lapTime": 75.785,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 3,
+    "lapTime": 75.882,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 4,
+    "lapTime": 75.893,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 5,
+    "lapTime": 75.495,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 6,
+    "lapTime": 75.885,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 7,
+    "lapTime": 75.503,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 8,
+    "lapTime": 75.931,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 9,
+    "lapTime": 75.867,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 10,
+    "lapTime": 75.941,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 11,
+    "lapTime": 75.892,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 12,
+    "lapTime": 75.803,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 13,
+    "lapTime": 75.312,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 14,
+    "lapTime": 75.872,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 15,
+    "lapTime": 75.95,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 16,
+    "lapTime": 75.3,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 17,
+    "lapTime": 75.605,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 18,
+    "lapTime": 75.238,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 19,
+    "lapTime": 75.72,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 20,
+    "lapTime": 75.813,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 21,
+    "lapTime": 75.8,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 22,
+    "lapTime": 75.956,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 23,
+    "lapTime": 75.3,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 24,
+    "lapTime": 75.645,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 25,
+    "lapTime": 75.223,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 26,
+    "lapTime": 75.832,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 27,
+    "lapTime": 75.17,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 28,
+    "lapTime": 75.36,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 29,
+    "lapTime": 75.743,
+    "tireAge": 28,
+    "fuelLoad": 29.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 30,
+    "lapTime": 75.358,
+    "tireAge": 29,
+    "fuelLoad": 28,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 31,
+    "lapTime": 75.475,
+    "tireAge": 30,
+    "fuelLoad": 26.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 32,
+    "lapTime": 75.59,
+    "tireAge": 31,
+    "fuelLoad": 25.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 33,
+    "lapTime": 75.098,
+    "tireAge": 32,
+    "fuelLoad": 23.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 34,
+    "lapTime": 75.79,
+    "tireAge": 33,
+    "fuelLoad": 22.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 35,
+    "lapTime": 75.45,
+    "tireAge": 34,
+    "fuelLoad": 21,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 36,
+    "lapTime": 75.076,
+    "tireAge": 35,
+    "fuelLoad": 19.6,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 37,
+    "lapTime": 75.284,
+    "tireAge": 36,
+    "fuelLoad": 18.2,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 38,
+    "lapTime": 75.261,
+    "tireAge": 37,
+    "fuelLoad": 16.8,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 39,
+    "lapTime": 75.448,
+    "tireAge": 38,
+    "fuelLoad": 15.4,
+    "trackTemp": 38
+  },
+  {
+    "track": "Circuit de Monaco",
+    "compound": "hard",
+    "lapNumber": 40,
+    "lapTime": 75.244,
+    "tireAge": 39,
+    "fuelLoad": 14,
+    "trackTemp": 38
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 1,
+    "lapTime": 76.084,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 2,
+    "lapTime": 76.021,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 3,
+    "lapTime": 75.651,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 4,
+    "lapTime": 76.002,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 5,
+    "lapTime": 75.699,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 6,
+    "lapTime": 75.683,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 7,
+    "lapTime": 76.122,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 8,
+    "lapTime": 75.673,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 9,
+    "lapTime": 75.977,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 10,
+    "lapTime": 75.349,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 11,
+    "lapTime": 76.023,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 12,
+    "lapTime": 75.341,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 13,
+    "lapTime": 75.956,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 14,
+    "lapTime": 75.424,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 15,
+    "lapTime": 76.005,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 16,
+    "lapTime": 75.429,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 17,
+    "lapTime": 75.523,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 18,
+    "lapTime": 75.71,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 19,
+    "lapTime": 75.963,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 20,
+    "lapTime": 75.686,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 21,
+    "lapTime": 75.772,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 22,
+    "lapTime": 75.491,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 23,
+    "lapTime": 75.229,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 24,
+    "lapTime": 75.444,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 25,
+    "lapTime": 75.343,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 26,
+    "lapTime": 75.342,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 27,
+    "lapTime": 75.362,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 28,
+    "lapTime": 75.507,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 29,
+    "lapTime": 75.499,
+    "tireAge": 28,
+    "fuelLoad": 29.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 30,
+    "lapTime": 75.399,
+    "tireAge": 29,
+    "fuelLoad": 28,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 31,
+    "lapTime": 75.68,
+    "tireAge": 30,
+    "fuelLoad": 26.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 32,
+    "lapTime": 75.758,
+    "tireAge": 31,
+    "fuelLoad": 25.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 33,
+    "lapTime": 75.259,
+    "tireAge": 32,
+    "fuelLoad": 23.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 34,
+    "lapTime": 75.417,
+    "tireAge": 33,
+    "fuelLoad": 22.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 35,
+    "lapTime": 75.818,
+    "tireAge": 34,
+    "fuelLoad": 21,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 36,
+    "lapTime": 75.071,
+    "tireAge": 35,
+    "fuelLoad": 19.6,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 37,
+    "lapTime": 75.25,
+    "tireAge": 36,
+    "fuelLoad": 18.2,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 38,
+    "lapTime": 75.413,
+    "tireAge": 37,
+    "fuelLoad": 16.8,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 39,
+    "lapTime": 75.261,
+    "tireAge": 38,
+    "fuelLoad": 15.4,
+    "trackTemp": 42
+  },
+  {
+    "track": "Silverstone",
+    "compound": "hard",
+    "lapNumber": 40,
+    "lapTime": 75.754,
+    "tireAge": 39,
+    "fuelLoad": 14,
+    "trackTemp": 42
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 1,
+    "lapTime": 75.934,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 2,
+    "lapTime": 75.673,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 3,
+    "lapTime": 75.776,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 4,
+    "lapTime": 75.629,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 5,
+    "lapTime": 76.073,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 6,
+    "lapTime": 75.931,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 7,
+    "lapTime": 75.487,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 8,
+    "lapTime": 75.598,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 9,
+    "lapTime": 75.898,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 10,
+    "lapTime": 76.024,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 11,
+    "lapTime": 76.04,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 12,
+    "lapTime": 75.459,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 13,
+    "lapTime": 75.381,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 14,
+    "lapTime": 75.351,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 15,
+    "lapTime": 75.398,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 16,
+    "lapTime": 75.895,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 17,
+    "lapTime": 75.75,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 18,
+    "lapTime": 75.682,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 19,
+    "lapTime": 75.494,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 20,
+    "lapTime": 75.735,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 21,
+    "lapTime": 75.681,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 22,
+    "lapTime": 75.428,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 23,
+    "lapTime": 75.519,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 24,
+    "lapTime": 75.91,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 25,
+    "lapTime": 75.602,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 26,
+    "lapTime": 75.598,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 27,
+    "lapTime": 75.835,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 28,
+    "lapTime": 75.433,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 29,
+    "lapTime": 75.557,
+    "tireAge": 28,
+    "fuelLoad": 29.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 30,
+    "lapTime": 75.635,
+    "tireAge": 29,
+    "fuelLoad": 28,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 31,
+    "lapTime": 75.508,
+    "tireAge": 30,
+    "fuelLoad": 26.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 32,
+    "lapTime": 75.742,
+    "tireAge": 31,
+    "fuelLoad": 25.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 33,
+    "lapTime": 75.788,
+    "tireAge": 32,
+    "fuelLoad": 23.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 34,
+    "lapTime": 75.553,
+    "tireAge": 33,
+    "fuelLoad": 22.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 35,
+    "lapTime": 75.687,
+    "tireAge": 34,
+    "fuelLoad": 21,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 36,
+    "lapTime": 75.041,
+    "tireAge": 35,
+    "fuelLoad": 19.6,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 37,
+    "lapTime": 75.093,
+    "tireAge": 36,
+    "fuelLoad": 18.2,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 38,
+    "lapTime": 75.641,
+    "tireAge": 37,
+    "fuelLoad": 16.8,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 39,
+    "lapTime": 75.14,
+    "tireAge": 38,
+    "fuelLoad": 15.4,
+    "trackTemp": 45
+  },
+  {
+    "track": "Monza",
+    "compound": "hard",
+    "lapNumber": 40,
+    "lapTime": 75.559,
+    "tireAge": 39,
+    "fuelLoad": 14,
+    "trackTemp": 45
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 1,
+    "lapTime": 76.007,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 2,
+    "lapTime": 75.859,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 3,
+    "lapTime": 75.519,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 4,
+    "lapTime": 75.921,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 5,
+    "lapTime": 76.191,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 6,
+    "lapTime": 75.911,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 7,
+    "lapTime": 75.691,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 8,
+    "lapTime": 75.513,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 9,
+    "lapTime": 75.686,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 10,
+    "lapTime": 75.641,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 11,
+    "lapTime": 76.04,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 12,
+    "lapTime": 75.739,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 13,
+    "lapTime": 75.628,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 14,
+    "lapTime": 75.847,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 15,
+    "lapTime": 75.894,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 16,
+    "lapTime": 75.493,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 17,
+    "lapTime": 75.238,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 18,
+    "lapTime": 75.978,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 19,
+    "lapTime": 75.609,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 20,
+    "lapTime": 75.733,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 21,
+    "lapTime": 75.287,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 22,
+    "lapTime": 75.923,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 23,
+    "lapTime": 75.27,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 24,
+    "lapTime": 75.557,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 25,
+    "lapTime": 75.228,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 26,
+    "lapTime": 75.38,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 27,
+    "lapTime": 75.358,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 28,
+    "lapTime": 75.885,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 29,
+    "lapTime": 75.774,
+    "tireAge": 28,
+    "fuelLoad": 29.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 30,
+    "lapTime": 75.093,
+    "tireAge": 29,
+    "fuelLoad": 28,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 31,
+    "lapTime": 75.788,
+    "tireAge": 30,
+    "fuelLoad": 26.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 32,
+    "lapTime": 75.308,
+    "tireAge": 31,
+    "fuelLoad": 25.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 33,
+    "lapTime": 75.391,
+    "tireAge": 32,
+    "fuelLoad": 23.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 34,
+    "lapTime": 75.215,
+    "tireAge": 33,
+    "fuelLoad": 22.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 35,
+    "lapTime": 75.427,
+    "tireAge": 34,
+    "fuelLoad": 21,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 36,
+    "lapTime": 75.36,
+    "tireAge": 35,
+    "fuelLoad": 19.6,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 37,
+    "lapTime": 75.667,
+    "tireAge": 36,
+    "fuelLoad": 18.2,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 38,
+    "lapTime": 75.348,
+    "tireAge": 37,
+    "fuelLoad": 16.8,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 39,
+    "lapTime": 75.672,
+    "tireAge": 38,
+    "fuelLoad": 15.4,
+    "trackTemp": 52
+  },
+  {
+    "track": "Bahrain",
+    "compound": "hard",
+    "lapNumber": 40,
+    "lapTime": 75.254,
+    "tireAge": 39,
+    "fuelLoad": 14,
+    "trackTemp": 52
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 1,
+    "lapTime": 75.641,
+    "tireAge": 0,
+    "fuelLoad": 68.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 2,
+    "lapTime": 75.732,
+    "tireAge": 1,
+    "fuelLoad": 67.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 3,
+    "lapTime": 75.545,
+    "tireAge": 2,
+    "fuelLoad": 65.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 4,
+    "lapTime": 75.764,
+    "tireAge": 3,
+    "fuelLoad": 64.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 5,
+    "lapTime": 76.206,
+    "tireAge": 4,
+    "fuelLoad": 63,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 6,
+    "lapTime": 75.498,
+    "tireAge": 5,
+    "fuelLoad": 61.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 7,
+    "lapTime": 76.004,
+    "tireAge": 6,
+    "fuelLoad": 60.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 8,
+    "lapTime": 75.798,
+    "tireAge": 7,
+    "fuelLoad": 58.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 9,
+    "lapTime": 76.021,
+    "tireAge": 8,
+    "fuelLoad": 57.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 10,
+    "lapTime": 75.343,
+    "tireAge": 9,
+    "fuelLoad": 56,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 11,
+    "lapTime": 75.691,
+    "tireAge": 10,
+    "fuelLoad": 54.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 12,
+    "lapTime": 75.37,
+    "tireAge": 11,
+    "fuelLoad": 53.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 13,
+    "lapTime": 76.086,
+    "tireAge": 12,
+    "fuelLoad": 51.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 14,
+    "lapTime": 75.962,
+    "tireAge": 13,
+    "fuelLoad": 50.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 15,
+    "lapTime": 76.029,
+    "tireAge": 14,
+    "fuelLoad": 49,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 16,
+    "lapTime": 75.918,
+    "tireAge": 15,
+    "fuelLoad": 47.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 17,
+    "lapTime": 75.378,
+    "tireAge": 16,
+    "fuelLoad": 46.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 18,
+    "lapTime": 76.007,
+    "tireAge": 17,
+    "fuelLoad": 44.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 19,
+    "lapTime": 75.652,
+    "tireAge": 18,
+    "fuelLoad": 43.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 20,
+    "lapTime": 75.801,
+    "tireAge": 19,
+    "fuelLoad": 42,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 21,
+    "lapTime": 75.567,
+    "tireAge": 20,
+    "fuelLoad": 40.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 22,
+    "lapTime": 75.579,
+    "tireAge": 21,
+    "fuelLoad": 39.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 23,
+    "lapTime": 75.704,
+    "tireAge": 22,
+    "fuelLoad": 37.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 24,
+    "lapTime": 75.56,
+    "tireAge": 23,
+    "fuelLoad": 36.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 25,
+    "lapTime": 75.57,
+    "tireAge": 24,
+    "fuelLoad": 35,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 26,
+    "lapTime": 75.252,
+    "tireAge": 25,
+    "fuelLoad": 33.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 27,
+    "lapTime": 75.567,
+    "tireAge": 26,
+    "fuelLoad": 32.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 28,
+    "lapTime": 75.719,
+    "tireAge": 27,
+    "fuelLoad": 30.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 29,
+    "lapTime": 75.278,
+    "tireAge": 28,
+    "fuelLoad": 29.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 30,
+    "lapTime": 75.611,
+    "tireAge": 29,
+    "fuelLoad": 28,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 31,
+    "lapTime": 75.77,
+    "tireAge": 30,
+    "fuelLoad": 26.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 32,
+    "lapTime": 75.43,
+    "tireAge": 31,
+    "fuelLoad": 25.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 33,
+    "lapTime": 75.749,
+    "tireAge": 32,
+    "fuelLoad": 23.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 34,
+    "lapTime": 75.118,
+    "tireAge": 33,
+    "fuelLoad": 22.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 35,
+    "lapTime": 75.403,
+    "tireAge": 34,
+    "fuelLoad": 21,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 36,
+    "lapTime": 75.518,
+    "tireAge": 35,
+    "fuelLoad": 19.6,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 37,
+    "lapTime": 75.607,
+    "tireAge": 36,
+    "fuelLoad": 18.2,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 38,
+    "lapTime": 75.088,
+    "tireAge": 37,
+    "fuelLoad": 16.8,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 39,
+    "lapTime": 75.198,
+    "tireAge": 38,
+    "fuelLoad": 15.4,
+    "trackTemp": 36
+  },
+  {
+    "track": "Spa-Francorchamps",
+    "compound": "hard",
+    "lapNumber": 40,
+    "lapTime": 75.316,
+    "tireAge": 39,
+    "fuelLoad": 14,
+    "trackTemp": 36
+  }
+]

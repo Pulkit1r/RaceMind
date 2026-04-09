@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { AIRecommendation, StrategyResult, RaceState } from '../data';
 import type { StrategyAdjustment } from '../raceMemory';
+import { isFittedModelActive } from '../physics';
 import StrategyPanel from './StrategyPanel';
 import {
   Brain, AlertTriangle, TrendingUp, Fuel, CloudRain,
   Target, Shield, Zap, Loader2, ChevronDown, ChevronUp, SkullIcon,
-  HelpCircle
+  HelpCircle, Dna, Satellite
 } from 'lucide-react';
 
 interface AIPanelProps {
@@ -14,6 +15,7 @@ interface AIPanelProps {
   strategies: StrategyResult[];
   state: RaceState;
   trackAdjustment?: StrategyAdjustment;
+  ergastSeededCount?: number;
 }
 
 const typeConfig: Record<string, { icon: React.ReactNode; accentClass: string }> = {
@@ -298,7 +300,7 @@ function getComputedColor(accentClass: string): string {
   return map[accentClass] || '#a855f7';
 }
 
-export default function AIPanel({ recommendations, strategies = [], state, trackAdjustment }: AIPanelProps) {
+export default function AIPanel({ recommendations, strategies = [], state, trackAdjustment, ergastSeededCount }: AIPanelProps) {
   const hasStrategies = strategies.length > 0;
   const isRacing = state.raceStatus === 'racing';
   const isEarlyRace = isRacing && state.currentLap > 0 && state.currentLap < 3;
@@ -360,6 +362,22 @@ export default function AIPanel({ recommendations, strategies = [], state, track
             }}
           />
         </div>
+      </div>
+
+      {/* ML Model & Data Provenance Badges */}
+      <div className="mb-3 flex flex-wrap gap-1.5">
+        {isFittedModelActive() && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[8px] font-heading font-bold uppercase tracking-wider bg-neon-green/10 text-neon-green border border-neon-green/20">
+            <Dna className="w-2.5 h-2.5" />
+            Model fitted on real F1 data
+          </span>
+        )}
+        {(ergastSeededCount ?? 0) > 0 && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[8px] font-heading font-bold uppercase tracking-wider bg-neon-blue/10 text-neon-blue border border-neon-blue/20">
+            <Satellite className="w-2.5 h-2.5" />
+            Seeded from {ergastSeededCount} real F1 races
+          </span>
+        )}
       </div>
 
       {/* Track Memory Insight */}
