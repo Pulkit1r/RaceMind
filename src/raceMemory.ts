@@ -280,3 +280,142 @@ export function createRaceMemoryEntry(params: {
     strategyGrade: params.strategyGrade,
   };
 }
+
+// ─── Ergast Historical Seeding ───────────────────────────────────────────
+// Seeds race memory with real F1 historical data from the Ergast API.
+
+import { fetchHistoricalRaces, type HistoricalRaceData } from './ergastApi';
+
+/**
+ * Infer tire compound from stint length heuristic.
+ * Short stints (< 15 laps) → soft
+ * Medium stints (15-25 laps) → medium
+ * Long stints (> 25 laps) → hard
+ */
+function inferCompoundFromStintLength(stintLaps: number): string {
+  if (stintLaps < 15) return 'soft';
+  if (stintLaps <= 25) return 'medium';
+  return 'hard';
+}
+
+/**
+ * Convert historical Ergast race data into a RaceMemoryEntry.
+ */
+function historicalToMemoryEntry(race: HistoricalRaceData): RaceMemoryEntry {
+  const winner = race.topResults[0];
+  
+  // Derive pit stop laps from the winner's pit stops
+  const winnerPits = race.pitStops
+    .filter(ps => ps.driverId === race.winner.toLowerCase() || ps.driverId.includes(race.winner.toLowerCase()))
+    .sort((a, b) => a.lap - b.lap);
+  
+  // If no pit data for winner, use aggregated first 3 pit stops
+  const pitLaps = winnerPits.length > 0
+    ? winnerPits.map(ps => ps.lap)
+    : race.pitStops.slice(0, 3).map(ps => ps.lap);
+  
+  // Infer compounds from stint lengths
+  const stintBoundaries = [0, ...pitLaps, race.totalLaps];
+  const compounds: string[] = [];
+  for (let i = 0; i < stintBoundaries.length - 1; i++) {
+    const stintLength = stintBoundaries[i + 1] - stintBoundaries[i];
+    compounds.push(inferCompoundFromStintLength(stintLength));
+  }
+
+  return {
+    id: `ergast-${race.circuitId}-${race.year}-${Date.now()}`,
+    timestamp: new Date(race.year, 0, 1).toISOString(),
+    trackName: race.trackName,
+    driverName: race.winner,
+
+    finalPosition: winner?.position ?? 1,
+    startPosition: winner ? winner.position + winner.positionsGained : 1,
+    positionsGained: winner?.positionsGained ?? 0,
+    totalLaps: race.totalLaps,
+
+    totalPitStops: pitLaps.length,
+    tireCompoundsUsed: compounds,
+    pitStopLaps: pitLaps,
+
+    avgTireWearAtPit: 35, // estimated
+    fastestLap: race.fastestLapTime ?? 75,
+    avgLapTime: race.fastestLapTime ? race.fastestLapTime + 2.5 : 78,
+    consistency: 0.8,
+
+    weatherConditions: 'sunny',
+    rainEncountered: false,
+
+    aiRecommendationsFollowed: 0,
+    aiRecommendationsIgnored: 0,
+    autoStrategyUsed: false,
+    strategyGrade: 'A',
+  };
+}
+
+/**
+ * Check if a track has already been seeded from Ergast.
+ */
+export function isTrackSeeded(trackName: string): boolean {
+  try {
+    return localStorage.getItem(`ergast_seeded_${trackName}`) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Get the number of Ergast-seeded races for a track.
+ */
+export function getErgastSeededCount(trackName: string): number {
+  const history = loadRaceHistory();
+  return history.filter(r => r.trackName === trackName && r.id.startsWith('ergast-')).length;
+}
+
+/**
+ * Seed race memory with historical Ergast data for a given track.
+ * Fetches 2022-2024 races and merges into existing memory without overwriting.
+ */
+export async function seedFromErgast(trackName: string): Promise<number> {
+  if (isTrackSeeded(trackName)) {
+    console.log(`[RaceMemory] Track ${trackName} already seeded from Ergast.`);
+    return getErgastSeededCount(trackName);
+  }
+
+  try {
+    console.log(`[RaceMemory] Seeding ${trackName} from Ergast API...`);
+    const races = await fetchHistoricalRaces(trackName, [2022, 2023, 2024]);
+    
+    if (races.length === 0) {
+      console.warn(`[RaceMemory] No Ergast data available for ${trackName}`);
+      return 0;
+    }
+
+    const entries = races.map(historicalToMemoryEntry);
+    const history = loadRaceHistory();
+    
+    // Merge: add Ergast entries that don't already exist
+    for (const entry of entries) {
+      const exists = history.some(h =>
+        h.id.startsWith('ergast-') &&
+        h.trackName === entry.trackName &&
+        new Date(h.timestamp).getFullYear() === new Date(entry.timestamp).getFullYear()
+      );
+      if (!exists) {
+        history.push(entry);
+      }
+    }
+    
+    // Cap and save
+    if (history.length > MAX_STORED_RACES) {
+      history.length = MAX_STORED_RACES;
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    localStorage.setItem(`ergast_seeded_${trackName}`, 'true');
+
+    console.log(`[RaceMemory] Seeded ${entries.length} historical races for ${trackName}`);
+    return entries.length;
+  } catch (err) {
+    console.warn(`[RaceMemory] Failed to seed from Ergast:`, err);
+    return 0;
+  }
+}

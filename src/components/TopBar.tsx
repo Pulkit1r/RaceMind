@@ -10,6 +10,7 @@ interface TopBarProps {
   state: RaceState;
   liveWeather?: WeatherData | null;
   weatherLoading?: boolean;
+  liveMode?: boolean;
 }
 
 function WeatherIcon({ weather }: { weather: RaceState['weather'] }) {
@@ -61,7 +62,7 @@ function DataCell({ icon, label, value, color = 'text-slate-200', live = false }
   );
 }
 
-export default function TopBar({ state, liveWeather, weatherLoading }: TopBarProps) {
+export default function TopBar({ state, liveWeather, weatherLoading, liveMode }: TopBarProps) {
   const lapProgress = state.totalLaps > 0 ? (state.currentLap / state.totalLaps) * 100 : 0;
   const isLive = liveWeather?.isLive ?? false;
 
@@ -92,6 +93,12 @@ export default function TopBar({ state, liveWeather, weatherLoading }: TopBarPro
           <div>
             <h1 className="font-heading text-sm font-bold tracking-wider text-white glow-text-purple">
               RACEMIND AI
+              {liveMode && (
+                <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-neon-red/20 text-neon-red border border-neon-red/30 animate-neon-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-neon-red animate-pulse" />
+                  LIVE
+                </span>
+              )}
             </h1>
             <p className="text-[9px] text-slate-500 font-mono">{state.trackName}</p>
           </div>

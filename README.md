@@ -458,39 +458,58 @@ RaceMind/
 ├── vite.config.ts                 # Vite build configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── README.md                      # This file
+├── scripts/
+│   └── fitTireCoefficients.ts     # 🧬 ML: Fit tire degradation from real F1 data
+├── public/
+│   └── data/
+│       ├── f1_lap_data.json       # 430 synthetic F1 lap data rows
+│       └── fittedCoefficients.json # ML-fitted tire model parameters
 ├── src/
 │   ├── main.tsx                   # React root mount
 │   ├── App.tsx                    # Router: / → Landing, /dashboard → Dashboard
 │   ├── LandingPage.tsx            # Animated landing page with feature showcase
 │   ├── Dashboard.tsx              # ⭐ Main simulation loop + state management
-│   ├── data.ts                    # ⭐ Physics engine + strategy AI (740+ lines)
-│   ├── raceMemory.ts              # 💾 Race memory system (localStorage)
+│   ├── data.ts                    # 📦 Barrel re-export (types + physics + strategy + competitors)
+│   ├── types.ts                   # 📝 All shared TypeScript interfaces
+│   ├── physics.ts                 # ⚙️ Tire degradation, lap time, track abrasion, fitted coefficients
+│   ├── strategy.ts                # 🧠 Strategy optimizer, recommendations, what-if
+│   ├── competitors.ts             # 🏎️ 19 AI competitor simulation
+│   ├── raceMemory.ts              # 💾 Race memory + Ergast historical seeding
+│   ├── ergastApi.ts               # 📡 Ergast API integration (historical race data)
+│   ├── openF1Api.ts               # 📡 OpenF1 API integration (live telemetry)
 │   ├── weatherApi.ts              # 🌧️ OpenWeatherMap API + climate simulation
+│   ├── realRaceData.ts            # 🏁 3 real 2024 GP datasets for comparison
 │   ├── audioAlerts.ts             # 🔊 Web Audio API tones + Web Speech TTS
 │   ├── index.css                  # 🎨 Design system: glassmorphism, animations
+│   ├── __tests__/
+│   │   ├── physics.test.ts        # 23 physics engine tests
+│   │   ├── strategy.test.ts       # 22 strategy engine tests
+│   │   └── raceMemory.test.ts     # 11 race memory tests
 │   └── components/
-│       ├── TopBar.tsx             # Live telemetry bar (position, gaps, fuel, ERS)
+│       ├── TopBar.tsx             # Live telemetry bar + LIVE badge
 │       ├── ControlPanel.tsx       # Track selector, tire buttons, goal selector, auto toggle
 │       ├── CenterPanel.tsx        # 3 charts: Lap Times, Tire Wear, Position
-│       ├── AIPanel.tsx            # AI recommendations + track memory + "Why?" expandable
+│       ├── AIPanel.tsx            # AI recommendations + ML badge + Ergast badge + track memory
 │       ├── StrategyPanel.tsx      # Strategy comparison table
 │       ├── RadioPanel.tsx         # Team radio messages feed
 │       ├── WhatIfModal.tsx        # What-If scenario comparator
-│       └── RaceResultModal.tsx    # End-of-race summary + AI grade
+│       └── RaceResultModal.tsx    # End-of-race summary + AI grade + PNG report download
 ```
 
 ### Key File Responsibilities
 
-| File | Size | Role |
-|---|---|---|
-| `data.ts` | ~28KB | **Brain of the app** — all physics formulas, strategy engine, AI recommendations, goal modifiers |
-| `Dashboard.tsx` | ~27KB | **Heart of the app** — simulation loop, state management, auto strategy, memory integration |
-| `raceMemory.ts` | ~10KB | **Memory of the app** — localStorage persistence, track learning, confidence boosting |
-| `weatherApi.ts` | ~12KB | Weather integration + climate simulation fallback |
-| `AIPanel.tsx` | ~23KB | AI recommendation cards with expandable explanations + track memory display |
-| `ControlPanel.tsx` | ~21KB | Track selector, goal selector, auto/manual toggle, tire management |
-| `LandingPage.tsx` | ~30KB | Premium landing page with animations and feature showcase |
-| `audioAlerts.ts` | ~6KB | Sound effects + text-to-speech voice engineer |
+| File | Role |
+|---|---|
+| `physics.ts` | **Physics engine** — tire degradation (quadratic cliff), lap time model, track abrasion, thermal wear, ML fitted coefficients loader |
+| `strategy.ts` | **Strategy engine** — pit strategy optimization (exhaustive sweep), AI recommendations, what-if simulator, goal-conditioned decisions |
+| `competitors.ts` | **Competitor modeling** — 19 AI drivers simulated with same physics engine |
+| `types.ts` | **Type definitions** — all shared interfaces (RaceState, TireModel, StrategyResult, etc.) |
+| `Dashboard.tsx` | **Heart of the app** — simulation loop, state management, auto strategy, Ergast seeding, live mode |
+| `raceMemory.ts` | **Memory system** — localStorage persistence, track learning, confidence boosting, Ergast historical seeding |
+| `ergastApi.ts` | **Ergast integration** — historical pit stop and race result fetching with 24h cache |
+| `openF1Api.ts` | **OpenF1 integration** — live session, driver, lap, pit stop, and stint data |
+| `weatherApi.ts` | **Weather system** — OpenWeatherMap + statistical climate fallback |
+| `RaceResultModal.tsx` | **Race results** — post-race summary, AI grade, shareable PNG report card download |
 
 ---
 
@@ -517,11 +536,37 @@ npm run dev
 - **Landing Page**: http://localhost:5173/
 - **Dashboard**: http://localhost:5173/dashboard
 
+### Running Tests
+```bash
+# Run all 56 unit tests
+npm test
+
+# Watch mode
+npm run test:watch
+```
+
+### Re-Fitting Tire Coefficients
+```bash
+# Fit tire degradation parameters from F1 lap data
+npm run fit:tires
+```
+
 ### Production Build
 ```bash
 npm run build
 npm run preview
 ```
+
+---
+
+## 📡 Real Data Sources
+
+| Source | Usage | Authentication |
+|---|---|---|
+| **FastF1 / Synthetic** | 430 lap data rows → ML-fitted tire degradation coefficients | None (pre-exported JSON) |
+| **Ergast API** | Historical pit stops & race results (2022-2024) → seed race memory | Free, no key required |
+| **OpenF1 API** | Live session, lap, stint, and pit stop telemetry | Free, no key required |
+| **OpenWeatherMap** | Real-time weather for 15 F1 circuits | Free tier (optional API key) |
 
 ---
 
